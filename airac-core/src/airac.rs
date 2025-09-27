@@ -1,12 +1,7 @@
-use std::borrow::Cow;
 use std::collections::HashMap;
+use std::process::Command;
 use bitflags::bitflags;
 use thiserror::Error;
-use pdf;
-use pdf::content::{Color, Op, Rgb};
-use pdf::font::Font;
-use pdf::object::{MaybeRef, NoResolve, Page, Resolve};
-use pdf::primitive::Name;
 
 #[derive(Error, Debug)]
 pub enum AIRACError {
@@ -21,6 +16,7 @@ pub enum AIRACError {
 type Result<T> = std::result::Result<T, AIRACError>;
 
 bitflags! {
+    #[derive(Debug, Copy, Clone)]
     pub struct AmendmentContent: u8 {
         const SUP  = 0b0001; // AIP Supplements
         const AMDT = 0b0010; // AIP Amendment
@@ -33,7 +29,7 @@ const AIP_UPDATE: AmendmentContent = AmendmentContent::SUP.union(AmendmentConten
 const MIDYEAR_UPDATE: AmendmentContent = AIP_UPDATE.union(AmendmentContent::ENRC);
 const ENDYEAR_UPDATE: AmendmentContent = MIDYEAR_UPDATE.union(AmendmentContent::VNC);
 
-struct AiracCycle {
+pub struct AiracCycle {
     pub cycle_id: String,
     pub effective_date: chrono::NaiveDate,
     pub content: AmendmentContent,
@@ -42,10 +38,8 @@ struct AiracCycle {
 pub fn get_schedule_for_year(year: u16) -> Result<Vec<AiracCycle>> {
     let url = get_schedule_url(year);
     let pdf_data = fetch_schedule_pdf(&url)?;
-    let text = parse_schedule_pdf(&pdf_data)?;
 
-    let cycles = Vec::new();
-    Ok(cycles)
+    parse_schedule_pdf(&pdf_data)
 }
 
 fn get_schedule_url(year: u16) -> String {
@@ -62,106 +56,73 @@ fn fetch_schedule_pdf(url: &str) -> Result<Vec<u8>> {
 }
 
 fn parse_schedule_pdf(pdf_data: &[u8]) -> Result<Vec<AiracCycle>> {
-    let pdf = pdf::file::FileOptions::cached().load(pdf_data)
-        .map_err(|e| AIRACError::ParseError(e.to_string()))?;
-
-    let mut cycles = Vec::new();
-    for page in pdf.pages() {
-        let page = page.map_err(|e| AIRACError::ParseError(e.to_string()))?;
-        let parsed_cycles = parse_airac_on_page(&page, &pdf.resolver())?;
-        cycles.extend(parsed_cycles);
-    }
+    let temp_file = save_pdf_to_tempfile(pdf_data)?;
+    let text = extract_text(&temp_file)?;
+    let cycles = extract_tables(&text);
     Ok(cycles)
 }
 
-fn text_objects<'src>(operations: &'src [Op], fonts: &'src HashMap<Name, MaybeRef<Font>>) -> impl Iterator<Item = TextObject> {
-    TextObjectParser {
-        ops: operations.iter(),
-        fonts: &fonts,
+fn save_pdf_to_tempfile(pdf_data: &[u8]) -> Result<String> {
+    let mut temp_file = std::env::temp_dir();
+    temp_file.push("airac_schedule.pdf");
+    std::fs::write(&temp_file, pdf_data)
+        .map_err(|e| AIRACError::FetchError(e.to_string()))?;
+    Ok(temp_file.to_str().unwrap().to_string())
+}
+
+fn extract_text(path: &str) -> Result<String>  {
+    let output = Command::new("pdftotext")
+        .arg("-layout")   // preserve table layout
+        .arg(path)        // input PDF
+        .arg("-")         // output to stdout instead of file
+        .output()
+        .map_err(|e| AIRACError::ParseError(format!("Failed to execute pdftotext: {}", e)))?;
+
+    if output.status.success() {
+        Ok(String::from_utf8_lossy(&output.stdout).into_owned())
+    } else {
+        Err(AIRACError::ParseError(format!(
+            "pdftotext failed: {}",
+            String::from_utf8_lossy(&output.stderr)
+        )))
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
-struct TextObject {
-    pub x: f32,
-    pub y: f32,
-    pub text: String,
-    pub fill_color: Option<Rgb>
-}
+fn extract_tables(text: &str) -> Vec<AiracCycle> {
+    let mut cycles = HashMap::new();
 
-#[derive(Debug, Clone)]
-struct TextObjectParser<'src> {
-    ops: std::slice::Iter<'src, Op>,
-    fonts: &'src HashMap<Name, MaybeRef<Font>>,
-}
+    let row_regex = regex::Regex::new(r"^\s*(\d{2}/\d{1,2})[0-9A-Za-z -]+?(\d{1,2}-[A-Za-z]{3}-\d{2})$").unwrap();
 
-impl<'src> Iterator for TextObjectParser<'src> {
-    type Item = TextObject;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let mut last_coords = None;
-        let mut last_text = None;
-        let mut fill_color = None;
-        let mut current_font = None;
-
-        while let Some(operator) = self.ops.next() {
-            match (operator) {
-                Op::FillColor {color: Color::Rgb(rgb)} => {
-                    fill_color = Some(*rgb);
-                }
-                Op::TextFont {name, .. } => {
-                    current_font = self.fonts.get(name)
-                }
-                Op::BeginText => {
-                    // Clear all prior state because we've just seen a
-                    // "begin text" op
-                    last_coords = None;
-                    last_text = None;
-                }
-                Op::EndText => {
-                    // "end of text" - we should have finished this text object,
-                    // if we got all the right information then we can yield it
-                    // to the caller. Otherwise, use take() to clear anything
-                    // we've seen so far and continue.
-                    if let (Some((x, y)), Some(text)) = (last_coords.take(), last_text.take()) {
-                        return Some(TextObject { x, y, text, fill_color });
-                    }
-                },
-                Op::MoveTextPosition {translation} => {
-                    // "Text Location" contains the location of the text on the
-                    // current page.
-                    last_coords = Some((translation.x, translation.y));
-                },
-                Op::TextDraw {text} => {
-                    if let Some(font) = current_font {
-                        if let Ok(decoded) = font.
-                    }
-
-                    last_text = Some(text.to_string_lossy());
-                }
-                _ => continue,
-            }
+    let mut current_content = AmendmentContent::empty();
+    for line in text.lines() {
+        if line.contains("(SUP)") {
+            current_content = AmendmentContent::SUP
+        } else if line.contains("(AMDT)") {
+            current_content = AmendmentContent::AMDT
+        } else if line.contains("(ENRC)") {
+            current_content = AmendmentContent::ENRC
+        } else if line.contains("(VNC)") {
+            current_content = AmendmentContent::VNC
         }
 
-        None
+        if let Some(caps) = row_regex.captures(line) {
+            let cycle_id = caps.get(1).unwrap().as_str().trim().to_string();
+            let date_str = caps.get(2).unwrap().as_str().trim();
+            if let Ok(effective_date) = chrono::NaiveDate::parse_from_str(date_str, "%d-%b-%y") {
+                cycles.entry(cycle_id.clone())
+                    .and_modify(|c: &mut AiracCycle| c.content |= current_content)
+                    .or_insert(AiracCycle {
+                    cycle_id: cycle_id.clone(),
+                    effective_date,
+                    content: current_content,
+                });
+            }
+        }
     }
-}
 
-fn parse_airac_on_page(page: &Page, resolver: &impl Resolve) -> Result<Vec<AiracCycle>> {
-    let content = match &page.contents {
-        Some(c) => c,
-        None => return Ok(Vec::new()),
-    };
-
-    let operations = content.operations(resolver).map_err(|e| AIRACError::ParseError(e.to_string()))?;
-    let resources = page.resources.clone().ok_or(AIRACError::ParseError("No resources on page".to_string()))?;
-    let fonts = resources.fonts.clone();
-
-    let text_objects = text_objects(&operations, &fonts);
-
-    let mut cycles = Vec::new();
-    cycles.extend(text_objects);
-    return Ok(vec![]);
+    let mut cycles_vec: Vec<AiracCycle> = cycles.into_values().collect();
+    cycles_vec.sort_by_key(|c| c.effective_date);
+    cycles_vec
 }
 
 #[cfg(test)]
