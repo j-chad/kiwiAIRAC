@@ -25,10 +25,6 @@ bitflags! {
     }
 }
 
-const AIP_UPDATE: AmendmentContent = AmendmentContent::SUP.union(AmendmentContent::AMDT);
-const MIDYEAR_UPDATE: AmendmentContent = AIP_UPDATE.union(AmendmentContent::ENRC);
-const ENDYEAR_UPDATE: AmendmentContent = MIDYEAR_UPDATE.union(AmendmentContent::VNC);
-
 pub struct AiracCycle {
     pub cycle_id: String,
     pub effective_date: chrono::NaiveDate,
