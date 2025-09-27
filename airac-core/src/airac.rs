@@ -1,9 +1,12 @@
 use std::borrow::Cow;
+use std::collections::HashMap;
 use bitflags::bitflags;
 use thiserror::Error;
 use pdf;
 use pdf::content::{Color, Op, Rgb};
-use pdf::object::{NoResolve, Page, Resolve};
+use pdf::font::Font;
+use pdf::object::{MaybeRef, NoResolve, Page, Resolve};
+use pdf::primitive::Name;
 
 #[derive(Error, Debug)]
 pub enum AIRACError {
@@ -71,37 +74,43 @@ fn parse_schedule_pdf(pdf_data: &[u8]) -> Result<Vec<AiracCycle>> {
     Ok(cycles)
 }
 
-fn text_objects(operations: &[Op]) -> impl Iterator<Item = TextObject<'_>> + '_ {
+fn text_objects<'src>(operations: &'src [Op], fonts: &'src HashMap<Name, MaybeRef<Font>>) -> impl Iterator<Item = TextObject> {
     TextObjectParser {
         ops: operations.iter(),
+        fonts: &fonts,
     }
 }
 
 #[derive(Debug, Clone, PartialEq)]
-struct TextObject<'src> {
+struct TextObject {
     pub x: f32,
     pub y: f32,
-    pub text: Cow<'src, str>,
+    pub text: String,
     pub fill_color: Option<Rgb>
 }
 
 #[derive(Debug, Clone)]
 struct TextObjectParser<'src> {
     ops: std::slice::Iter<'src, Op>,
+    fonts: &'src HashMap<Name, MaybeRef<Font>>,
 }
 
 impl<'src> Iterator for TextObjectParser<'src> {
-    type Item = TextObject<'src>;
+    type Item = TextObject;
 
     fn next(&mut self) -> Option<Self::Item> {
         let mut last_coords = None;
         let mut last_text = None;
         let mut fill_color = None;
+        let mut current_font = None;
 
         while let Some(operator) = self.ops.next() {
             match (operator) {
                 Op::FillColor {color: Color::Rgb(rgb)} => {
                     fill_color = Some(*rgb);
+                }
+                Op::TextFont {name, .. } => {
+                    current_font = self.fonts.get(name)
                 }
                 Op::BeginText => {
                     // Clear all prior state because we've just seen a
@@ -124,7 +133,11 @@ impl<'src> Iterator for TextObjectParser<'src> {
                     last_coords = Some((translation.x, translation.y));
                 },
                 Op::TextDraw {text} => {
-                    last_text = text.to_string().map_or_else(|_| None, |s| Some(Cow::Owned(s)));
+                    if let Some(font) = current_font {
+                        if let Ok(decoded) = font.
+                    }
+
+                    last_text = Some(text.to_string_lossy());
                 }
                 _ => continue,
             }
@@ -141,7 +154,10 @@ fn parse_airac_on_page(page: &Page, resolver: &impl Resolve) -> Result<Vec<Airac
     };
 
     let operations = content.operations(resolver).map_err(|e| AIRACError::ParseError(e.to_string()))?;
-    let text_objects = text_objects(&operations);
+    let resources = page.resources.clone().ok_or(AIRACError::ParseError("No resources on page".to_string()))?;
+    let fonts = resources.fonts.clone();
+
+    let text_objects = text_objects(&operations, &fonts);
 
     let mut cycles = Vec::new();
     cycles.extend(text_objects);
