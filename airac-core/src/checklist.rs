@@ -1,9 +1,9 @@
-use std::process::Command;
 use bitflags::bitflags;
-use crate::airac::AIRACError;
+use regex::CaptureMatches;
 use crate::pdf;
 
 const CHECKLIST_URL: &str = "https://www.aip.net.nz/assets/AIP/General-GEN/0-GEN/GEN_0.4.pdf";
+const COLUMN_REGEX: &str = r"\s*(?:(?:([ A-Za-z]+ [\d.Y-]+) +(\d{1,2} [A-Z]{3} \d{2}))|(Blank)) +((?:[1234] *)+)";
 
 bitflags! {
     #[derive(Debug, Clone, Copy)]
@@ -23,9 +23,11 @@ pub enum ChecklistError {
 type Result<T> = std::result::Result<T, ChecklistError>;
 
 pub struct ChecklistItem {
+    pub sort_order: usize,
     pub page_number: String,
     pub effective_date: chrono::NaiveDate,
     pub volumes: Volumes,
+    pub blank_back: bool,
 }
 
 pub fn get_checklist() -> Result<Vec<ChecklistItem>> {
@@ -48,16 +50,41 @@ fn parse_checklist_pdf(pdf_data: &[u8]) -> Result<Vec<ChecklistItem>> {
     let text = pdf::extract_text(temp_file.path())
         .map_err(|e| ChecklistError::ParseError(format!("Failed to extract text from PDF: {}", e)))?;
 
-    let regex = regex::Regex::new(r"([A-Za-z]+ [\d.-]+) +(\d{1,2} [A-Z]{3} \d{2}) +((?:[1234] *)+)")
+    let col1_page_regex = regex::Regex::new(format!(r"(?m)^{}", COLUMN_REGEX).as_str())
+        .map_err(|e| ChecklistError::ParseError(format!("Failed to compile regex: {}", e)))?;
+    let col2_page_regex = regex::Regex::new(format!(r"(?m){}$", COLUMN_REGEX).as_str())
         .map_err(|e| ChecklistError::ParseError(format!("Failed to compile regex: {}", e)))?;
 
+    let mut sort_order = 0;
     let mut items = Vec::new();
-    for cap in regex.captures_iter(&text) {
+
+    let pages = text.split("\u{c}");
+    for page in pages {
+        let col1_matches = col1_page_regex.captures_iter(page);
+        parse_page_column(col1_matches, &mut sort_order, &mut items)?;
+
+        let col2_matches = col2_page_regex.captures_iter(page);
+        parse_page_column(col2_matches, &mut sort_order, &mut items)?;
+    }
+
+    Ok(items)
+}
+
+fn parse_page_column(matches: CaptureMatches, sort_order: &mut usize, items: &mut Vec<ChecklistItem>) -> Result<()> {
+    for cap in matches {
+        if &cap[3] == "Blank" {
+            // top item on the stack is a blank page
+            if let Some(last_item) = items.last_mut() {
+                last_item.blank_back = true;
+            }
+            continue;
+        }
+
         let page_number = cap[1].trim().to_string();
         let effective_date = chrono::NaiveDate::parse_from_str(&cap[2], "%d %b %y")
             .map_err(|e| ChecklistError::ParseError(format!("Failed to parse date: {}", e)))?;
 
-        let volumes_str = cap[3].trim();
+        let volumes_str = cap[4].trim();
         let mut volumes = Volumes::empty();
         for ch in volumes_str.chars() {
             match ch {
@@ -69,16 +96,17 @@ fn parse_checklist_pdf(pdf_data: &[u8]) -> Result<Vec<ChecklistItem>> {
             }
         }
         items.push(ChecklistItem {
+            sort_order: *sort_order,
             page_number,
             effective_date,
             volumes,
+            blank_back: false,
         });
+
+        *sort_order += 1;
     }
 
-    // Sort items by effective_date descending
-
-    items.sort_unstable_by(|a, b| b.effective_date.cmp(&a.effective_date));
-    Ok(items)
+    Ok(())
 }
 
 #[cfg(test)]
