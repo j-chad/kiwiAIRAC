@@ -1,6 +1,7 @@
 use std::process::Command;
 use bitflags::bitflags;
 use crate::airac::AIRACError;
+use crate::pdf;
 
 const CHECKLIST_URL: &str = "https://www.aip.net.nz/assets/AIP/General-GEN/0-GEN/GEN_0.4.pdf";
 
@@ -42,8 +43,10 @@ fn fetch_checklist_pdf(url: &str) -> Result<Vec<u8>> {
 }
 
 fn parse_checklist_pdf(pdf_data: &[u8]) -> Result<Vec<ChecklistItem>> {
-    let temp_file = save_pdf_to_tempfile(pdf_data)?;
-    let text = extract_text(&temp_file)?;
+    let temp_file = pdf::save_pdf_to_tempfile("checklist", pdf_data)
+        .map_err(|e| ChecklistError::ParseError(format!("Failed to create temp file: {}", e)))?;
+    let text = pdf::extract_text(temp_file.path())
+        .map_err(|e| ChecklistError::ParseError(format!("Failed to extract text from PDF: {}", e)))?;
 
     let regex = regex::Regex::new(r"([A-Za-z]+ [\d.-]+) +(\d{1,2} [A-Z]{3} \d{2}) +((?:[1234] *)+)")
         .map_err(|e| ChecklistError::ParseError(format!("Failed to compile regex: {}", e)))?;
@@ -72,31 +75,19 @@ fn parse_checklist_pdf(pdf_data: &[u8]) -> Result<Vec<ChecklistItem>> {
         });
     }
 
+    // Sort items by effective_date descending
+
+    items.sort_unstable_by(|a, b| b.effective_date.cmp(&a.effective_date));
     Ok(items)
 }
 
-fn save_pdf_to_tempfile(pdf_data: &[u8]) -> Result<String> {
-    let mut temp_file = std::env::temp_dir();
-    temp_file.push("airac_schedule.pdf");
-    std::fs::write(&temp_file, pdf_data)
-        .map_err(|e| AIRACError::FetchError(e.to_string()))?;
-    Ok(temp_file.to_str().unwrap().to_string())
-}
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-fn extract_text(path: &str) -> Result<String>  {
-    let output = Command::new("pdftotext")
-        .arg("-layout")   // preserve table layout
-        .arg(path)        // input PDF
-        .arg("-")         // output to stdout instead of file
-        .output()
-        .map_err(|e| AIRACError::ParseError(format!("Failed to execute pdftotext: {}", e)))?;
-
-    if output.status.success() {
-        Ok(String::from_utf8_lossy(&output.stdout).into_owned())
-    } else {
-        Err(ChecklistError::ParseError(format!(
-            "pdftotext failed: {}",
-            String::from_utf8_lossy(&output.stderr)
-        )))
+    #[test]
+    fn test_get_checklist() {
+        let checklist = get_checklist();
+        assert!(!checklist.is_ok());
     }
 }

@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::process::Command;
 use bitflags::bitflags;
 use thiserror::Error;
+use crate::pdf;
 
 #[derive(Error, Debug)]
 pub enum AIRACError {
@@ -52,36 +53,12 @@ fn fetch_schedule_pdf(url: &str) -> Result<Vec<u8>> {
 }
 
 fn parse_schedule_pdf(pdf_data: &[u8]) -> Result<Vec<AiracCycle>> {
-    let temp_file = save_pdf_to_tempfile(pdf_data)?;
-    let text = extract_text(&temp_file)?;
+    let temp_file = pdf::save_pdf_to_tempfile("airac", pdf_data)
+        .map_err(|e| AIRACError::ParseError(format!("Failed to create temp file: {}", e)))?;
+    let text = pdf::extract_text(temp_file.path())
+        .map_err(|e| AIRACError::ParseError(format!("Failed to extract text from PDF: {}", e)))?;
     let cycles = extract_tables(&text);
     Ok(cycles)
-}
-
-fn save_pdf_to_tempfile(pdf_data: &[u8]) -> Result<String> {
-    let mut temp_file = std::env::temp_dir();
-    temp_file.push("airac_schedule.pdf");
-    std::fs::write(&temp_file, pdf_data)
-        .map_err(|e| AIRACError::FetchError(e.to_string()))?;
-    Ok(temp_file.to_str().unwrap().to_string())
-}
-
-fn extract_text(path: &str) -> Result<String>  {
-    let output = Command::new("pdftotext")
-        .arg("-layout")   // preserve table layout
-        .arg(path)        // input PDF
-        .arg("-")         // output to stdout instead of file
-        .output()
-        .map_err(|e| AIRACError::ParseError(format!("Failed to execute pdftotext: {}", e)))?;
-
-    if output.status.success() {
-        Ok(String::from_utf8_lossy(&output.stdout).into_owned())
-    } else {
-        Err(AIRACError::ParseError(format!(
-            "pdftotext failed: {}",
-            String::from_utf8_lossy(&output.stderr)
-        )))
-    }
 }
 
 fn extract_tables(text: &str) -> Vec<AiracCycle> {
