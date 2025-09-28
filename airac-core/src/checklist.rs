@@ -3,7 +3,7 @@ use regex::CaptureMatches;
 use crate::pdf;
 
 const CHECKLIST_URL: &str = "https://www.aip.net.nz/assets/AIP/General-GEN/0-GEN/GEN_0.4.pdf";
-const COLUMN_REGEX: &str = r"\s*(?:(?:([ A-Za-z]+ [\d.Y-]+) +(\d{1,2} [A-Z]{3} \d{2}))|(Blank)) +((?:[1234] *)+)";
+const COLUMN_REGEX: &str = r"(?:(?:(?<page>(?:[A-Z]+ )?[A-Za-z]+ [\d.Y-]+) +(?<effective_date>\d{1,2} [A-Z]{3} \d{2}))|(?<blank>Blank)) +(?<volumes>(?:[1234] *)+)";
 
 bitflags! {
     #[derive(Debug, Clone, Copy)]
@@ -72,19 +72,26 @@ fn parse_checklist_pdf(pdf_data: &[u8]) -> Result<Vec<ChecklistItem>> {
 
 fn parse_page_column(matches: CaptureMatches, sort_order: &mut usize, items: &mut Vec<ChecklistItem>) -> Result<()> {
     for cap in matches {
-        if &cap[3] == "Blank" {
+        if cap.name("blank").is_some() {
             // top item on the stack is a blank page
-            if let Some(last_item) = items.last_mut() {
-                last_item.blank_back = true;
-            }
+            let last_item = items.last_mut().ok_or(ChecklistError::ParseError("Missing blank item".to_string()))?;
+            last_item.blank_back = true;
             continue;
         }
 
-        let page_number = cap[1].trim().to_string();
-        let effective_date = chrono::NaiveDate::parse_from_str(&cap[2], "%d %b %y")
+        let page_number = cap.name("page").ok_or(ChecklistError::ParseError(
+            "Missing page number".to_string(),
+        ))?.as_str().trim().to_string();
+
+        let date_str = cap.name("effective_date").ok_or(ChecklistError::ParseError(
+            "Missing effective date".to_string(),
+        ))?.as_str().trim();
+        let effective_date = chrono::NaiveDate::parse_from_str(date_str, "%d %b %y")
             .map_err(|e| ChecklistError::ParseError(format!("Failed to parse date: {}", e)))?;
 
-        let volumes_str = cap[4].trim();
+        let volumes_str = cap.name("volumes").ok_or(ChecklistError::ParseError(
+            "Missing volumes".to_string(),
+        ))?.as_str().trim();
         let mut volumes = Volumes::empty();
         for ch in volumes_str.chars() {
             match ch {
