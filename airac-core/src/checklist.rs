@@ -15,6 +15,7 @@ bitflags! {
     }
 }
 
+#[derive(Debug)]
 pub enum ChecklistError {
     FetchError(String),
     ParseError(String),
@@ -22,6 +23,7 @@ pub enum ChecklistError {
 
 type Result<T> = std::result::Result<T, ChecklistError>;
 
+#[derive(Clone)]
 pub struct ChecklistItem {
     pub sort_order: usize,
     pub page_number: String,
@@ -118,11 +120,13 @@ fn parse_page_column(matches: CaptureMatches, sort_order: &mut usize, items: &mu
 
 #[cfg(test)]
 mod tests {
+    use crate::amendments::get_future_amendments;
     use super::*;
 
     #[test]
     fn test_get_checklist() {
-        let checklist = get_checklist();
-        assert!(!checklist.is_ok());
+        let checklist = get_checklist().unwrap();
+        let future = get_future_amendments(chrono::NaiveDate::from_ymd(2025, 7, 6), &checklist);
+        assert!(!future.is_empty());
     }
 }
