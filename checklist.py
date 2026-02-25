@@ -9,6 +9,8 @@ import requests
 from camelot.core import Table, TableList
 from pypdf import PdfReader
 
+from amendments import Volume, Subscription
+
 # Where to download the checklist PDF from.
 CHECKLIST_URL = 'https://www.aip.net.nz/assets/AIP/General-GEN/0-GEN/GEN_0.4.pdf'
 
@@ -45,6 +47,7 @@ class ParseError(Exception):
 class Checklist:
 	@staticmethod
 	def download() -> 'Checklist':
+		"""Downloads the checklist PDF from the specified URL and returns a Checklist instance."""
 		response = requests.get(CHECKLIST_URL)
 		response.raise_for_status()
 
@@ -53,11 +56,21 @@ class Checklist:
 			pdf_path = pathlib.Path(f.name)
 			return Checklist(pdf_path)
 
+
 	def __init__(self, pdf_path: pathlib.Path):
+		"""Initialises the Checklist by parsing the specified PDF file."""
 		self._path = pdf_path
 		self._width = self._get_pdf_width()
 		pages = self._get_combined_pages()
-		tables = self._extract_tables(pages)
+		self.df = self._extract_tables(pages)
+
+	def volumes(self, volumes: Subscription | set[Volume]) -> 'Checklist':
+		"""Filter the checklist to only include rows that are relevant to the specified volumes."""
+		if isinstance(volumes, Subscription):
+			volumes = volumes.value
+
+		self.df = self.df[self.df["Volume"].apply(lambda v: not v.isdisjoint(volumes))].reset_index(drop=True)
+		return self
 
 	def _get_pdf_width(self) -> int:
 		"""Returns the width of the PDF pages, and checks that all pages have the same width."""
@@ -85,7 +98,7 @@ class Checklist:
 			f"{separator},{top},{self._width},{FOOTER_TOP}"
 		]
 
-	def _extract_tables(self, pages: list[int]) -> list[pd.DataFrame]:
+	def _extract_tables(self, pages: list[int]) -> pd.DataFrame:
 		"""Extracts tables from the specified pages in the checklist PDF."""
 		tables: list[pd.DataFrame] = []
 
@@ -102,7 +115,7 @@ class Checklist:
 		even_pages = self._extract_tables_from_area(even_page_numbers, self._get_table_areas(odd=False))
 		tables.extend(even_pages)
 
-		return tables
+		return pd.concat(tables, ignore_index=True)
 
 	def _extract_tables_from_area(self, pages: list[int], areas: list[str]) -> Iterator[pd.DataFrame]:
 		"""Extracts tables from the specified pages and areas using camelot."""
@@ -150,8 +163,8 @@ class Checklist:
 		df = df[~(df["Page No"].str.contains(r"^[A-Za-z\s]+$") & (df["Effective"].str.strip() == "") & (
 				df["Volume"].str.strip() == ""))]
 
-		# Convert volume string into set of ints
-		df["Volume"] = df["Volume"].str.findall(r"[1234]").apply(lambda x: set(map(int, x)))
+		# Convert volume string into set of volumes
+		df["Volume"] = df["Volume"].str.findall(r"[1234]").apply(lambda x: set(map(lambda v: Volume(int(v)), x)))
 
 		# Convert date
 		df["Effective"] = pd.to_datetime(df["Effective"], format=DATE_FORMAT)
@@ -201,4 +214,6 @@ class Checklist:
 
 if __name__ == '__main__':
 	path = pathlib.Path('test/GEN_0.4.pdf')
-	checklist = Checklist(path)
+	checklist = Checklist(path).volumes(Subscription.PLANNING)
+	print(checklist)
+
