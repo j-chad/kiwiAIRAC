@@ -1,8 +1,10 @@
 import pathlib
 import re
 import tempfile
+from typing import Iterator
 
 import camelot
+import pandas as pd
 import requests
 from camelot.core import Table, TableList
 from pypdf import PdfReader
@@ -29,6 +31,13 @@ TABLE_SEPARATOR_EVEN = 193
 # If table parsing accuracy is below this threshold a ParseError will be raised.
 MIN_TABLE_PARSE_ACCURACY = 95
 
+# Page Name
+PAGE_REGEX = re.compile(r"Blank|[a-zA-Z ]+\d+(?:-\d+)?(?:.\d+)?(?:-\d+)?[A-Z]?")
+
+# Date Format
+DATE_FORMAT = "%d %b %y"
+DATE_REGEX = re.compile(r"\d{1,2} [A-Za-z]{3} \d{2}")
+
 class ParseError(Exception):
 	pass
 
@@ -53,9 +62,9 @@ class Checklist:
 	def _get_pdf_width(self) -> int:
 		"""Returns the width of the PDF pages, and checks that all pages have the same width."""
 		reader = PdfReader(self._path)
-		width = reader.pages[0].mediabox._width
+		width = reader.pages[0].mediabox.width
 		for page in reader.pages[1:]:
-			if page.mediabox._width != width:
+			if page.mediabox.width != width:
 				raise ParseError("PDF pages have different widths, which is not supported")
 		return width
 
@@ -78,7 +87,7 @@ class Checklist:
 
 	def _extract_tables(self, pages: list[int]) -> list[Table]:
 		"""Extracts tables from the specified pages in the checklist PDF."""
-		tables: list[Table] = []
+		tables: list[pd.DataFrame] = []
 
 		pages = sorted(pages)
 		if pages[0] == 1:
@@ -95,7 +104,40 @@ class Checklist:
 
 		return tables
 
-	def _extract_table_from_area(self, pages: list[int], areas: list[str]) -> TableList:
+	@staticmethod
+	def _normalise_df(self, df: pd.DataFrame) -> pd.DataFrame:
+		"""Normalises the extracted table DataFrame"""
+		# drop the header row
+		df.columns = df.iloc[0]
+		df.columns = df.columns.str.replace(r"\s+", " ", regex=True).str.strip() # normalise whitespace for easier comparison
+		df = df.drop(index=0).reset_index(drop=True)
+
+		# fix common parsing errors
+		if df.shape[1] == 2:
+			# sometimes the "Effective" column is merged with the "Page No" column
+			if df.columns.equals(pd.Index(["Page No Effective", "Volume"])):
+				# use PAGE_REGEX & DATE_REGEX to split the "Page No" and "Effective" values into separate columns
+				df[["Page No", "Effective"]] = df["Page No Effective"].str.extract(f"({PAGE_REGEX.pattern})(?:\\s+({DATE_REGEX.pattern}))?")
+				df = df.drop(columns=["Page No Effective"])
+
+		if df.shape[1] != 3:
+			raise ParseError(f"Expected 3 columns, found {df.shape[1]}")
+
+		if not set(df.columns) == {"Page No", "Effective", "Volume"}:
+			raise ParseError(f"Unexpected column headers: {df.iloc[0].tolist()}")
+
+		# Remove section headers
+		df = df[~(df["Page No"].str.contains(r"^[A-Za-z\s]+$") & (df["Effective"].str.strip() == "") & (df["Volume"].str.strip() == ""))]
+
+		# Convert volume string into set of ints
+		df["Volume"] = df["Volume"].str.findall(r"[1234]").apply(lambda x: set(map(int, x)))
+
+		# Convert date
+		df["Effective"] = pd.to_datetime(df["Effective"], format=DATE_FORMAT)
+
+		return df
+
+	def _extract_table_from_area(self, pages: list[int], areas: list[str]) -> Iterator[pd.DataFrame]:
 		"""Extracts tables from the specified pages and areas using camelot."""
 		pages_str = ",".join(str(p) for p in pages)
 		tables = camelot.read_pdf(self._path, pages=pages_str, flavor='network', table_areas=areas, parallel=True)
@@ -107,7 +149,7 @@ class Checklist:
 			if table.parsing_report['accuracy'] < MIN_TABLE_PARSE_ACCURACY:
 				raise ParseError(f"Low parsing accuracy: {table.parsing_report['accuracy']}%")
 
-		return tables
+		return map(lambda t: self._normalise_df(t.df), tables)
 
 	def _get_combined_pages(self) -> list[int]:
 		"""
