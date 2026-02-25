@@ -85,59 +85,26 @@ class Checklist:
 			f"{separator},{top},{self._width},{FOOTER_TOP}"
 		]
 
-	def _extract_tables(self, pages: list[int]) -> list[Table]:
+	def _extract_tables(self, pages: list[int]) -> list[pd.DataFrame]:
 		"""Extracts tables from the specified pages in the checklist PDF."""
 		tables: list[pd.DataFrame] = []
 
 		pages = sorted(pages)
 		if pages[0] == 1:
-			first_page = self._extract_table_from_area([pages.pop(0)], self._get_table_areas(odd=True, first=True))
+			first_page = self._extract_tables_from_area([pages.pop(0)], self._get_table_areas(odd=True, first=True))
 			tables.extend(first_page)
 
 		odd_page_numbers = [p for p in pages if p % 2 == 1]
-		odd_pages = self._extract_table_from_area(odd_page_numbers, self._get_table_areas(odd=True))
+		odd_pages = self._extract_tables_from_area(odd_page_numbers, self._get_table_areas(odd=True))
 		tables.extend(odd_pages)
 
 		even_page_numbers = [p for p in pages if p % 2 == 0]
-		even_pages = self._extract_table_from_area(even_page_numbers, self._get_table_areas(odd=False))
+		even_pages = self._extract_tables_from_area(even_page_numbers, self._get_table_areas(odd=False))
 		tables.extend(even_pages)
 
 		return tables
 
-	@staticmethod
-	def _normalise_df(self, df: pd.DataFrame) -> pd.DataFrame:
-		"""Normalises the extracted table DataFrame"""
-		# drop the header row
-		df.columns = df.iloc[0]
-		df.columns = df.columns.str.replace(r"\s+", " ", regex=True).str.strip() # normalise whitespace for easier comparison
-		df = df.drop(index=0).reset_index(drop=True)
-
-		# fix common parsing errors
-		if df.shape[1] == 2:
-			# sometimes the "Effective" column is merged with the "Page No" column
-			if df.columns.equals(pd.Index(["Page No Effective", "Volume"])):
-				# use PAGE_REGEX & DATE_REGEX to split the "Page No" and "Effective" values into separate columns
-				df[["Page No", "Effective"]] = df["Page No Effective"].str.extract(f"({PAGE_REGEX.pattern})(?:\\s+({DATE_REGEX.pattern}))?")
-				df = df.drop(columns=["Page No Effective"])
-
-		if df.shape[1] != 3:
-			raise ParseError(f"Expected 3 columns, found {df.shape[1]}")
-
-		if not set(df.columns) == {"Page No", "Effective", "Volume"}:
-			raise ParseError(f"Unexpected column headers: {df.iloc[0].tolist()}")
-
-		# Remove section headers
-		df = df[~(df["Page No"].str.contains(r"^[A-Za-z\s]+$") & (df["Effective"].str.strip() == "") & (df["Volume"].str.strip() == ""))]
-
-		# Convert volume string into set of ints
-		df["Volume"] = df["Volume"].str.findall(r"[1234]").apply(lambda x: set(map(int, x)))
-
-		# Convert date
-		df["Effective"] = pd.to_datetime(df["Effective"], format=DATE_FORMAT)
-
-		return df
-
-	def _extract_table_from_area(self, pages: list[int], areas: list[str]) -> Iterator[pd.DataFrame]:
+	def _extract_tables_from_area(self, pages: list[int], areas: list[str]) -> Iterator[pd.DataFrame]:
 		"""Extracts tables from the specified pages and areas using camelot."""
 		pages_str = ",".join(str(p) for p in pages)
 		tables = camelot.read_pdf(self._path, pages=pages_str, flavor='network', table_areas=areas, parallel=True)
@@ -150,6 +117,46 @@ class Checklist:
 				raise ParseError(f"Low parsing accuracy: {table.parsing_report['accuracy']}%")
 
 		return map(lambda t: self._normalise_df(t.df), tables)
+
+	@staticmethod
+	def _normalise_df(df: pd.DataFrame) -> pd.DataFrame:
+		"""Normalises the extracted table DataFrame
+
+		parsing the table is a bit error-prone, so this function applies some heuristics to fix common parsing errors
+		and normalise the data into a more consistent format.
+		"""
+		# drop the header row
+		df.columns = df.iloc[0]
+		df.columns = df.columns.str.replace(r"\s+", " ",
+											regex=True).str.strip()  # normalise whitespace for easier comparison
+		df = df.drop(index=0).reset_index(drop=True)
+
+		# fix common parsing errors
+		if df.shape[1] == 2:
+			# sometimes the "Effective" column is merged with the "Page No" column
+			if df.columns.equals(pd.Index(["Page No Effective", "Volume"])):
+				# use PAGE_REGEX & DATE_REGEX to split the "Page No" and "Effective" values into separate columns
+				df[["Page No", "Effective"]] = df["Page No Effective"].str.extract(
+					f"({PAGE_REGEX.pattern})(?:\\s+({DATE_REGEX.pattern}))?")
+				df = df.drop(columns=["Page No Effective"])
+
+		if df.shape[1] != 3:
+			raise ParseError(f"Expected 3 columns, found {df.shape[1]}")
+
+		if not set(df.columns) == {"Page No", "Effective", "Volume"}:
+			raise ParseError(f"Unexpected column headers: {df.iloc[0].tolist()}")
+
+		# Remove section headers
+		df = df[~(df["Page No"].str.contains(r"^[A-Za-z\s]+$") & (df["Effective"].str.strip() == "") & (
+				df["Volume"].str.strip() == ""))]
+
+		# Convert volume string into set of ints
+		df["Volume"] = df["Volume"].str.findall(r"[1234]").apply(lambda x: set(map(int, x)))
+
+		# Convert date
+		df["Effective"] = pd.to_datetime(df["Effective"], format=DATE_FORMAT)
+
+		return df
 
 	def _get_combined_pages(self) -> list[int]:
 		"""
