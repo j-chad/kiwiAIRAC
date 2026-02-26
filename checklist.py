@@ -10,6 +10,7 @@ import pandas as pd
 import requests
 from pypdf import PdfReader
 
+from aip_page import AIPPage
 from errors import ParseError
 from models import Volume, Subscription
 
@@ -177,7 +178,7 @@ class Checklist:
 
 		# Remove section headers
 		df = df[~(df["Page No"].str.contains(r"^[A-Za-z\s]+$") & (df["Effective"].str.strip() == "") & (
-				df["Volume"].str.strip() == ""))]
+				df["Volume"].str.strip() == ""))].reset_index(drop=True)
 
 		# Convert volume string into set of volumes
 		df["Volume"] = df["Volume"].str.findall(r"[1234]").apply(lambda x: set(map(lambda v: Volume(int(v)), x)))
