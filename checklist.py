@@ -1,6 +1,8 @@
+import datetime
 import pathlib
 import re
 import tempfile
+from itertools import zip_longest
 from typing import Iterator
 
 import camelot
@@ -72,6 +74,11 @@ class Checklist:
 		self.df = self.df[self.df["Volume"].apply(lambda v: not v.isdisjoint(volumes))].reset_index(drop=True)
 		return self
 
+	def effective_after(self, date: datetime.date) -> 'Checklist':
+		"""Filter the checklist to only include rows with an effective date after the specified date."""
+		self.df = self.df[self.df["Effective"] > pd.to_datetime(date)].reset_index(drop=True)
+		return self
+
 	def _get_pdf_width(self) -> int:
 		"""Returns the width of the PDF pages, and checks that all pages have the same width."""
 		reader = PdfReader(self._path)
@@ -109,11 +116,15 @@ class Checklist:
 
 		odd_page_numbers = [p for p in pages if p % 2 == 1]
 		odd_pages = self._extract_tables_from_area(odd_page_numbers, self._get_table_areas(odd=True))
-		tables.extend(odd_pages)
 
 		even_page_numbers = [p for p in pages if p % 2 == 0]
 		even_pages = self._extract_tables_from_area(even_page_numbers, self._get_table_areas(odd=False))
-		tables.extend(even_pages)
+
+		for even_df, odd_df in zip_longest(even_pages, odd_pages):
+			if even_df is not None:
+				tables.append(even_df)
+			if odd_df is not None:
+				tables.append(odd_df)
 
 		return pd.concat(tables, ignore_index=True)
 
@@ -129,7 +140,13 @@ class Checklist:
 			if table.parsing_report['accuracy'] < MIN_TABLE_PARSE_ACCURACY:
 				raise ParseError(f"Low parsing accuracy: {table.parsing_report['accuracy']}%")
 
-		return map(lambda t: self._normalise_df(t.df), tables)
+		# sort tables by their x-coordinate (i.e. left to right)
+		tables = sorted(tables, key = lambda t: t._bbox[0])
+
+		# normalise the tables into a consistent format
+		tables = map(lambda t: self._normalise_df(t.df), tables)
+
+		return tables
 
 	@staticmethod
 	def _normalise_df(df: pd.DataFrame) -> pd.DataFrame:
@@ -214,6 +231,6 @@ class Checklist:
 
 if __name__ == '__main__':
 	path = pathlib.Path('test/GEN_0.4.pdf')
-	checklist = Checklist(path).volumes(Subscription.PLANNING)
+	checklist = Checklist(path).volumes(Subscription.VISUAL).effective_after(datetime.date(2026, 1, 1))
 	print(checklist)
 
