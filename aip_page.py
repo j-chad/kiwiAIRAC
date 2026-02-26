@@ -2,6 +2,8 @@ import re
 from enum import Enum
 from typing import Optional
 
+from errors import ParseError
+
 GENERIC_PATTERN = re.compile(r"([a-zA-Z]+) (\d+)\.(\d+)-(\d+)")
 CHARTS_PATTERN = re.compile(r"(NZ[A-Z]{2}) AD 2-(\d+)\.(\d+)(Y?)")
 
@@ -43,4 +45,4 @@ class AIPPage:
 			if match.group(4) == 'Y':
 				self.flag = PageFlag.YELLOW
 		else:
-			raise ValueError(f"Invalid page format: {page}")
+			raise ParseError(f"Invalid page format: {page}")

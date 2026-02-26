@@ -10,6 +10,7 @@ import pandas as pd
 import requests
 from pypdf import PdfReader
 
+from errors import ParseError
 from models import Volume, Subscription
 
 # Where to download the checklist PDF from.
@@ -41,8 +42,7 @@ PAGE_REGEX = re.compile(r"Blank|[a-zA-Z ]+\d+(?:-\d+)?(?:\.\d+)?(?:-\d+)?[A-Z]?"
 DATE_FORMAT = "%d %b %y"
 DATE_REGEX = re.compile(r"\d{1,2} [A-Za-z]{3} \d{2}")
 
-class ParseError(Exception):
-	pass
+
 
 
 class Checklist:
