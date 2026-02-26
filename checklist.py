@@ -35,7 +35,7 @@ TABLE_SEPARATOR_EVEN = 193
 MIN_TABLE_PARSE_ACCURACY = 95
 
 # Page Name
-PAGE_REGEX = re.compile(r"Blank|[a-zA-Z ]+\d+(?:-\d+)?(?:.\d+)?(?:-\d+)?[A-Z]?")
+PAGE_REGEX = re.compile(r"Blank|[a-zA-Z ]+\d+(?:-\d+)?(?:\.\d+)?(?:-\d+)?[A-Z]?")
 
 # Date Format
 DATE_FORMAT = "%d %b %y"
