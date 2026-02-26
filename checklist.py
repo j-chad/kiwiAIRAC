@@ -8,7 +8,6 @@ from typing import Iterator
 import camelot
 import pandas as pd
 import requests
-from camelot.core import Table, TableList
 from pypdf import PdfReader
 
 from amendments import Volume, Subscription
