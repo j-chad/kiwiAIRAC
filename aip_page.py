@@ -139,11 +139,14 @@ class AIPPage:
 		return f"{self.section}_{self.subsection}_{self.document}"
 
 	@property
-	def url(self) -> Optional[str]:
-		"""Returns the URL for the page based on the title information.
+	def simple_url(self) -> Optional[str]:
+		"""Returns the URL for the page purely based on the page information.
 
-		- If the page is not available, raises a DocumentAccessError.
-		- If the URL is not guessable based on the page information, returns None.
+		More complex sections like aerodrome charts may not have a predictable URL
+		so this method will return None for those.
+
+		:raise DocumentAccessError: if the page is not available online
+		:return: the URL for the page, or None if it cannot be determined lexically
 		"""
 		if not self.available:
 			raise DocumentAccessError(f"Page {self.page} is not available online")

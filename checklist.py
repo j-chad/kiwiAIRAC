@@ -231,6 +231,6 @@ class Checklist:
 
 if __name__ == '__main__':
 	path = pathlib.Path('test/GEN_0.4.pdf')
-	checklist = Checklist(path).volumes(Subscription.VISUAL).effective_after(datetime.date(2026, 1, 1))
-	print(checklist)
+	checklist = Checklist.download()
+	print(checklist.df)
 

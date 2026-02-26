@@ -8,5 +8,6 @@ dependencies = [
 	"camelot-py[base]",
 	"pypdf",
 	"pandas",
+	"beautifulsoup4",
 ]
 
