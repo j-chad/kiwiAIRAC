@@ -11,3 +11,4 @@ class Subscription(Enum):
 	PLANNING = {Volume.VOLUME_1}
 	INSTRUMENT = {Volume.VOLUME_2, Volume.VOLUME_3}
 	VISUAL = {Volume.VOLUME_4}
+

@@ -10,7 +10,7 @@ import pandas as pd
 import requests
 from pypdf import PdfReader
 
-from amendments import Volume, Subscription
+from models import Volume, Subscription
 
 # Where to download the checklist PDF from.
 CHECKLIST_URL = 'https://www.aip.net.nz/assets/AIP/General-GEN/0-GEN/GEN_0.4.pdf'
