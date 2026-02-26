@@ -11,7 +11,7 @@ UNAVAILABLE_PATTERN = re.compile(r"([a-zA-Z ]+) (\d+)-(\d+)")
 # Where the emergency document is located in the En Route section
 EMERGENCY_DOCUMENT = 15
 
-class PageFlag(Enum):
+class PageColour(Enum):
 	YELLOW = 'Y'
 	PINK = 'P'
 
@@ -30,7 +30,7 @@ class AIPPage:
 	subsection: int
 	document: int
 	page: int
-	flag: Optional[PageFlag] = None
+	colour: Optional[PageColour] = None
 	aerodrome: Optional[str] = None
 
 	# some documents can not be found online
@@ -49,7 +49,7 @@ class AIPPage:
 			self.subsection = int(match.group(2))
 			self.document = int(match.group(3))
 			self.page = int(match.group(4))
-			self.flags = self._parse_flags()
+			self.colour = self._get_colour()
 		elif match := AERODROME_PATTERN.match(page):
 			self.aerodrome = match.group(1)
 			self.subsection = 0
@@ -62,7 +62,7 @@ class AIPPage:
 				self.section = Section.AERODROME_CHARTS
 				self.document = int(match.group(2))
 				self.page = int(chart)
-				self.flags = self._parse_flags(match.group(4))
+				self.colour = self._get_colour(match.group(4))
 		elif match := UNAVAILABLE_PATTERN.match(page):
 			self.section = Section(match.group(1))
 			self.subsection = 0
@@ -78,10 +78,15 @@ class AIPPage:
 	def __repr__(self):
 		return f"AIPPage(page='{self.page}')"
 
-	def _parse_flags(self, flags_str: str = "") -> Optional[PageFlag]:
+	def _get_colour(self, flags_str: str = "") -> Optional[PageColour]:
+		"""Determines the colour of the page
+
+		- If the page has a "Y" flag, it is yellow.
+		- If the page is the emergency document in the En Route section, it is pink.
+		- Otherwise, it is white (None).
+		"""
 		if flags_str == "Y":
-			return PageFlag.YELLOW
+			return PageColour.YELLOW
 		elif self.section == Section.EN_ROUTE and self.document == EMERGENCY_DOCUMENT:
-			# The emergency document in the En Route section is pink, but it doesn't have a "P" flag in the PDF.
-			return PageFlag.PINK
+			return PageColour.PINK
 		return None
