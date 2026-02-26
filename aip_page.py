@@ -21,7 +21,7 @@ class Section(Enum):
 	GENERAL = 'GEN'
 	EN_ROUTE = 'ENR'
 	AERODROMES = 'AD'
-	AERODROME_CHARTS = 'AD 2'
+	AERODROME_CHARTS = 'AD_CHART'
 
 
 SUBSECTION_NAMES: dict[Section, dict[int, str]] = {
@@ -55,7 +55,7 @@ SECTION_URL_PATTERNS: dict[Section, str] = {
 AERODROME_URL = BASE_URL + "Aerodromes-AD1/AERODROMES/{aerodrome}_AD2.pdf"
 
 class AIPPage:
-	page: str
+	_page_text: str
 
 	section: Section
 	subsection: int
@@ -68,7 +68,7 @@ class AIPPage:
 	available: bool = True
 
 	def __init__(self, page: str):
-		self.page = page
+		self._page_text = page
 
 		if page == Section.BLANK.value:
 			self.section = Section.BLANK
@@ -105,10 +105,10 @@ class AIPPage:
 			raise ParseError(f"Invalid page format: {page}")
 
 	def __str__(self):
-		return self.page
+		return self._page_text
 
 	def __repr__(self):
-		return f"AIPPage(page='{self.page}')"
+		return f"AIPPage(page='{self._page_text}')"
 
 	def _get_colour(self, flags_str: str = "") -> Optional[PageColour]:
 		"""Determines the colour of the page
@@ -123,8 +123,24 @@ class AIPPage:
 			return PageColour.PINK
 		return None
 
-	def _get_url(self) -> Optional[str]:
-		"""Constructs the URL for the page based on its section, subsection, document, and page numbers.
+	@property
+	def cache_key(self) -> str:
+		"""Returns a unique key for caching the page content to prevent redundant downloads.
+
+		If the page is not available, the cache key is simply the page string.
+		"""
+		if not self.available or self.section == Section.AERODROME_CHARTS:
+			return self._page_text
+
+		if self.aerodrome:
+			if self.section == Section.AERODROMES:
+				return f"{self.section}_{self.aerodrome}"
+
+		return f"{self.section}_{self.subsection}_{self.document}"
+
+	@property
+	def url(self) -> Optional[str]:
+		"""Returns the URL for the page based on the title information.
 
 		- If the page is not available, raises a DocumentAccessError.
 		- If the URL is not guessable based on the page information, returns None.
