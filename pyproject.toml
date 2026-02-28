@@ -4,10 +4,11 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.14"
 dependencies = [
-	"requests",
-	"camelot-py[base]",
+	"camelot-py",
 	"pypdf",
 	"pandas",
 	"beautifulsoup4",
+	"playwright",
+	"httpx>=0.28.1",
 ]
 

@@ -1,8 +1,9 @@
 import enum
 from typing import Optional
 
-import requests
 import bs4
+
+from download import client
 
 URL = "https://www.aip.net.nz/"
 HEADER = "Additional documents"
@@ -27,7 +28,7 @@ class AdditionalDocument:
 
 def load_additional_documents() -> list[AdditionalDocument]:
 	"""fetches the list of additional documents from the AIP website"""
-	response = requests.get(URL)
+	response = client.get(URL)
 	response.raise_for_status()
 
 	soup = bs4.BeautifulSoup(response.text, "html.parser")

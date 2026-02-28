@@ -7,10 +7,10 @@ from typing import Iterator
 
 import camelot
 import pandas as pd
-import requests
 from pypdf import PdfReader
 
 from aip_page import AIPPage
+from download import client
 from errors import ParseError
 from models import Volume, Subscription
 
@@ -44,14 +44,15 @@ DATE_FORMAT = "%d %b %y"
 DATE_REGEX = re.compile(r"\d{1,2} [A-Za-z]{3} \d{2}")
 
 
-
-
 class Checklist:
 	@staticmethod
 	def download() -> 'Checklist':
 		"""Downloads the checklist PDF from the specified URL and returns a Checklist instance."""
-		response = requests.get(CHECKLIST_URL)
+		response = client.get(CHECKLIST_URL)
 		response.raise_for_status()
+
+		if response.headers.get('Content-Type') != 'application/pdf':
+			raise ParseError(f"Expected a PDF file, but got Content-Type: {response.headers.get('Content-Type')}")
 
 		with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as f:
 			f.write(response.content)
