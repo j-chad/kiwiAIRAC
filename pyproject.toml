@@ -10,5 +10,6 @@ dependencies = [
 	"beautifulsoup4",
 	"playwright",
 	"httpx>=0.28.1",
+	"platformdirs>=4.9.2",
 ]
 

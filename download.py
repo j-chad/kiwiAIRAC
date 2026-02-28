@@ -1,17 +1,23 @@
 import abc
 import asyncio
 import base64
+import hashlib
 import os
 import random
 import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Optional
+from urllib.parse import urlparse
 
 import httpx
+from platformdirs import PlatformDirs
 
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-PROXY_BASE = base64.b64decode("aHR0cHM6Ly9nb3ByZWZsaWdodC5jby5uei9kYXRhL2NoYXJ0Lw").decode("utf-8")
+PROXY_BASE = base64.b64decode("aHR0cHM6Ly9nb3ByZWZsaWdodC5jby5uei9kYXRhL2NoYXJ0Lw==").decode("utf-8")
+
+DOWNLOAD_CACHE_DIR = PlatformDirs("kiwiAIRAC", False).user_cache_path
+CACHE_EXPIRY_DAYS = 7
 
 class Proxy(abc.ABC):
 	@abc.abstractmethod
@@ -63,22 +69,35 @@ class _RateLimiter:
 @dataclass(frozen=True)
 class DownloadJob:
 	url: str
-	dest: Path
 	content_types: Optional[Iterable[str]] = None
+
+	@property
+	def filename(self) -> str:
+		parsed = urlparse(self.url)
+		ext = Path(parsed.path).suffix  # includes leading "."
+		digest = hashlib.sha256(self.url.encode("utf-8")).hexdigest()[:24]
+		return f"{digest}{ext or ''}"
 
 class _DownloadManager:
 	def __init__(
 		self,
+		download_dir: Path,
 		user_agent: str,
 		proxy: Proxy | None = None,
+		cache_expiry_days: int = CACHE_EXPIRY_DAYS,
 		concurrency: int = 8,
 		rps: float = 4.0,
 		timeout: float = 30.0,
 		max_retries: int = 3,
 	):
+		self.download_dir = download_dir
+		if not self.download_dir.exists():
+			self.download_dir.mkdir(parents=False)
+
 		self._rate_limiter = _RateLimiter(rps=rps)
 		self._max_retries = max_retries
 		self._proxy = proxy
+		self._cache_expiry_seconds = cache_expiry_days * 24 * 3600
 
 		limits = httpx.Limits(
 			max_connections=concurrency * 2,
@@ -93,34 +112,76 @@ class _DownloadManager:
 			limits=limits,
 		)
 
+		# Semaphore to limit concurrent downloads
 		self._semaphore = asyncio.Semaphore(concurrency)
 
+		# Prevent duplicate concurrent downloads of the *same* cache path
+		self._inflight_lock = asyncio.Lock()
+		self._inflight: dict[Path, asyncio.Task[Path]] = {}
+
 	async def download(self, job: DownloadJob) -> Path:
-		job.dest.parent.mkdir(parents=True, exist_ok=True)
+		"""
+		Returns a local cached file path. If cached copy is fresh, returns immediately.
+		Otherwise, downloads (with retries) into the cache dir and returns the path.
+		"""
+		cache_path = self.download_dir / job.filename
+		if self._is_fresh(cache_path):
+			return cache_path
 
-		url = self._rewrite_url_if_needed(job.url)
+		# De-dupe concurrent downloads to the same file
+		async with self._inflight_lock:
+			existing = self._inflight.get(cache_path)
+			if existing is None:
+				task = asyncio.create_task(self._download_to_cache(job, cache_path))
+				self._inflight[cache_path] = task
+				existing = task
 
-		async with self._semaphore:
-			await self._rate_limiter.acquire()
-			return await self._download_with_retries(url, job.dest)
+		try:
+			return await existing
+		finally:
+			# Clean up inflight map when done (only by the last waiter)
+			if existing.done():
+				async with self._inflight_lock:
+					await self._inflight.pop(cache_path, None)
 
 	async def download_many(self, jobs: Iterable[DownloadJob]) -> tuple[Path]:
 		tasks = [asyncio.create_task(self.download(job)) for job in jobs]
 		return await asyncio.gather(*tasks)
+
+	def _is_fresh(self, path: Path) -> bool:
+		if not path.exists():
+			return False
+		age = time.time() - path.stat().st_mtime
+		return age < self._cache_expiry_seconds
 
 	def _rewrite_url_if_needed(self, url: str) -> str:
 		if self._proxy and self._proxy.should_proxy(url):
 			return self._proxy.get_proxy_url(url)
 		return url
 
-	async def _download_with_retries(self, url: str, dest: Path) -> Path:
+	async def _download_to_cache(self, job: DownloadJob, cache_path: Path) -> Path:
+		# Another check in case someone else refreshed it while we waited for inflight lock
+		if self._is_fresh(cache_path):
+			return cache_path
+
+		url = self._rewrite_url_if_needed(job.url)
+
+		async with self._semaphore:
+			await self._rate_limiter.acquire()
+			await self._download_with_retries(url, cache_path)
+
+		return cache_path
+
+	async def _download_with_retries(self, url: str, dest: Path) -> None:
 		last_exc: Optional[Exception] = None
 
 		for attempt in range(self._max_retries + 1):
 			try:
 				tmp = dest.with_suffix(dest.suffix + ".part")
-				if tmp.exists():
-					tmp.unlink(missing_ok=True)
+				try:
+					tmp.unlink()
+				except FileNotFoundError:
+					pass
 
 				async with self.client.stream("GET", url) as resp:
 					resp.raise_for_status()
@@ -132,17 +193,20 @@ class _DownloadManager:
 							f.write(chunk)
 
 				os.replace(tmp, dest)
-				return dest
+				return
 
 			except (httpx.TimeoutException, httpx.TransportError, httpx.HTTPStatusError) as e:
 				last_exc = e
 				if attempt >= self._max_retries:
 					break
-				# Exponential backoff + jitter
 				backoff = (2 ** attempt) * 0.5 + random.random() * 0.25
 				await asyncio.sleep(backoff)
 
 		assert last_exc is not None
 		raise last_exc
 
-download_manager = _DownloadManager(USER_AGENT, proxy=_AIPProxy(PROXY_BASE))
+download_manager = _DownloadManager(
+	download_dir=Path(DOWNLOAD_CACHE_DIR),
+	user_agent=USER_AGENT,
+	proxy=_AIPProxy(PROXY_BASE),
+)
