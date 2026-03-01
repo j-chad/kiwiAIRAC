@@ -9,7 +9,7 @@ import camelot
 import pandas as pd
 from pypdf import PdfReader
 
-from download import downloader, DownloadJob
+from download import downloader, DownloadJob, RichProgressReporter
 from errors import ParseError
 from models import Volume, Subscription
 
@@ -47,7 +47,8 @@ class Checklist:
 	@staticmethod
 	async def fetch() -> 'Checklist':
 		"""Downloads the checklist PDF from the specified URL and returns a Checklist instance."""
-		checklist_path = await downloader.download(CHECKLIST_JOB)
+		with RichProgressReporter() as progress:
+			checklist_path = await downloader.download(CHECKLIST_JOB, progress=progress)
 		return Checklist(checklist_path)
 
 	def __init__(self, pdf_path: pathlib.Path):

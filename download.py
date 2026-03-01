@@ -1,4 +1,3 @@
-import abc
 import asyncio
 import base64
 import hashlib
@@ -6,15 +5,17 @@ import os
 import random
 import time
 import urllib
-import uuid
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Optional, Sequence, Protocol
+from typing import Iterable, Optional, Sequence, Protocol, Any
 from urllib.parse import urlparse
-from uuid import UUID
 
 import httpx
 from platformdirs import PlatformDirs
+from rich.progress import (
+	Progress, BarColumn, DownloadColumn, TransferSpeedColumn, TimeRemainingColumn, TextColumn, TaskID
+)
+from rich.console import Console
 
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
 PROXY_BASE = base64.b64decode("aHR0cHM6Ly9nb3ByZWZsaWdodC5jby5uei9kYXRhL2NoYXJ0Lw==").decode("utf-8")
@@ -23,16 +24,55 @@ DOWNLOAD_CACHE_DIR = PlatformDirs("kiwiAIRAC", False).user_cache_path
 CACHE_EXPIRY_DAYS = 7
 
 class ProgressReporter(Protocol):
-	def start(self, label: str, total: Optional[int]) -> int: ... #
-	def advance(self, task_id: int, n: int) -> None: ...
-	def finish(self, task_id: int) -> None: ...
-	def skip(self, label: str) -> None: ...
+	def start(self, label: str) -> Any: ... #
+	def update_total(self, task_id: Any, total: Optional[int]) -> None: ...
+	def advance(self, task_id: Any, n: int) -> None: ...
+	def finish(self, task_id: Any) -> None: ...
+	def cache_hit(self, label: str) -> None: ...
 
 class _NullProgressReporter(ProgressReporter):
-	def start(self, label: str, total: Optional[int]) -> int: return -1
-	def advance(self, task_id: int, n: int) -> None: pass
-	def finish(self, task_id: int) -> None: pass
-	def skip(self, label: str) -> None: pass
+	def start(self, label: str) -> int: return -1
+	def update_total(self, task_id: Any, total: Optional[int]) -> None: pass
+	def advance(self, task_id: Any, n: int) -> None: pass
+	def finish(self, task_id: Any) -> None: pass
+	def cache_hit(self, label: str) -> None: pass
+
+class RichProgressReporter(ProgressReporter):
+	def __init__(self):
+		self.console = Console()
+		self.progress = Progress(
+			TextColumn("{task.description}"),
+			BarColumn(),
+			DownloadColumn(),
+			TransferSpeedColumn(),
+			TimeRemainingColumn(),
+			transient=True,
+			console=self.console,
+		)
+
+	def __enter__(self):
+		self.progress.__enter__()
+		return self
+
+	def __exit__(self, exc_type, exc, tb):
+		return self.progress.__exit__(exc_type, exc, tb)
+
+	def start(self, label: str) -> TaskID:
+		return self.progress.add_task(label)
+
+	def update_total(self, task_id: TaskID, total: Optional[int]) -> None:
+		self.progress.update(task_id, total=total)
+
+	def advance(self, task_id: TaskID, n: int) -> None:
+		self.progress.update(task_id, advance=n)
+
+	def finish(self, task_id: TaskID) -> None:
+		# noinspection PyTypeChecker
+		total = self.progress.tasks[task_id].total
+		self.progress.update(task_id, completed=total)
+
+	def cache_hit(self, label: str) -> None:
+		self.console.print(f"[green]Cache hit:[/green] {label}")
 
 class Proxy(Protocol):
 	def should_proxy(self, url: str) -> bool:
@@ -149,7 +189,7 @@ class _DownloadManager:
 
 		cache_path = self._download_dir / job.cache_filename
 		if self._is_fresh(cache_path):
-			progress_reporter.skip(job.cache_filename)
+			progress_reporter.cache_hit(job.filename)
 			return cache_path
 
 		# De-dupe concurrent downloads to the same file
@@ -186,7 +226,7 @@ class _DownloadManager:
 	async def _download_to_cache(self, job: DownloadJob, cache_path: Path, *, progress: ProgressReporter) -> Path:
 		# Another check in case someone else refreshed it while we waited for inflight lock
 		if self._is_fresh(cache_path):
-			progress.skip(job.cache_filename)
+			progress.cache_hit(job.cache_filename)
 			return cache_path
 
 		url = self._rewrite_url_if_needed(job.url)
@@ -199,6 +239,8 @@ class _DownloadManager:
 
 	async def _download_with_retries(self, job: DownloadJob, url: str, dest: Path, *, progress: ProgressReporter) -> None:
 		last_exc: Optional[Exception] = None
+
+		task_id = progress.start(job.filename)
 
 		# Jitter to prevent overwhelming the server
 		jitter = random.random() * self.max_jitter_seconds
@@ -223,13 +265,12 @@ class _DownloadManager:
 								f"Unexpected Content-Type {ct!r} for {url}; expected one of {list(job.content_types)}"
 							)
 
-					total = None
 					if resp.headers.get("Content-Length"):
 						try:
 							total = int(resp.headers["Content-Length"])
+							progress.update_total(task_id, total)
 						except ValueError:
-							total = None
-					task_id = progress.start(job.filename, total)
+							pass
 
 					with open(tmp, "wb") as f:
 						async for chunk in resp.aiter_bytes(chunk_size=64 * 1024):

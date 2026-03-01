@@ -11,5 +11,6 @@ dependencies = [
 	"playwright",
 	"httpx>=0.28.1",
 	"platformdirs>=4.9.2",
+	"rich>=14.3.3",
 ]
 
