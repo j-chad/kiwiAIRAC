@@ -9,7 +9,7 @@ import camelot
 import pandas as pd
 from pypdf import PdfReader
 
-from aip_page import AIPPage
+from aip_page import AIPPage, categorise_pages
 from download import downloader, DownloadJob, RichProgressReporter
 from errors import ParseError
 from models import Volume, Subscription
@@ -232,11 +232,8 @@ class Checklist:
 async def _main():
 	checklist_inst = await Checklist.fetch()
 	checklist_inst.volumes(Subscription.VISUAL).effective_after(datetime.date(2024, 6, 1))
-	download_jobs = (DownloadJob(url=page.simple_url, content_types=['application/pdf']) for page in checklist_inst if page.simple_url)
-	with RichProgressReporter() as progress:
-		await downloader.download_many(download_jobs, progress=progress)
 
-	print(f"Found {len(checklist_inst)} pages in the checklist")
+	print(categorise_pages(checklist_inst))
 
 if __name__ == '__main__':
 	import asyncio

@@ -1,6 +1,6 @@
 import re
 from enum import Enum
-from typing import Optional
+from typing import Optional, Iterable
 
 from errors import ParseError, DocumentAccessError
 
@@ -49,8 +49,8 @@ SUBSECTION_NAMES: dict[Section, dict[int, str]] = {
 BASE_URL = "https://www.aip.net.nz/assets/AIP/"
 SECTION_URL_PATTERNS: dict[Section, str] = {
 	Section.GENERAL: BASE_URL + "General-GEN/{subsection}-{subsection_name}/GEN_{subsection}.{document}.pdf",
-	Section.EN_ROUTE: BASE_URL + "En-route-ENR/{subsection}-{subsection_name}/ENR_{subsection}.{document}.pdf",
-	Section.AERODROMES: BASE_URL + "Aerodromes-AD1/{subsection_name}/AD_{subsection}.{document}.pdf"
+	Section.EN_ROUTE: BASE_URL + "En-route-ENR/{subsection}-{subsection_name}/ENR_{subsection}.{document:02d}.pdf",
+	Section.AERODROMES: BASE_URL + "Aerodromes-AD1/{subsection_name}/AD_{subsection}.{document:02d}.pdf"
 }
 AERODROME_URL = BASE_URL + "Aerodromes-AD1/AERODROMES/{aerodrome}_AD2.pdf"
 
@@ -60,7 +60,7 @@ class AIPPage:
 	section: Section
 	subsection: int
 	document: int
-	page: int
+	page_number: int
 	colour: Optional[PageColour] = None
 	aerodrome: Optional[str] = None
 
@@ -74,13 +74,13 @@ class AIPPage:
 			self.section = Section.BLANK
 			self.subsection = 0
 			self.document = 0
-			self.page = 0
+			self.page_number = 0
 			self.available = False
 		elif match := GENERIC_PATTERN.match(page):
 			self.section = Section(match.group(1))
 			self.subsection = int(match.group(2))
 			self.document = int(match.group(3))
-			self.page = int(match.group(4))
+			self.page_number = int(match.group(4))
 			self.colour = self._get_colour()
 		elif match := AERODROME_PATTERN.match(page):
 			self.aerodrome = match.group(1)
@@ -89,17 +89,17 @@ class AIPPage:
 			if chart is None:
 				self.section = Section.AERODROMES
 				self.document = 0
-				self.page = int(match.group(2))
+				self.page_number = int(match.group(2))
 			else:
 				self.section = Section.AERODROME_CHARTS
 				self.document = int(match.group(2))
-				self.page = int(chart)
+				self.page_number = int(chart)
 				self.colour = self._get_colour(match.group(4))
 		elif match := UNAVAILABLE_PATTERN.match(page):
 			self.section = Section(match.group(1))
 			self.subsection = 0
 			self.document = int(match.group(2))
-			self.page = int(match.group(3))
+			self.page_number = int(match.group(3))
 			self.available = False
 		else:
 			raise ParseError(f"Invalid page format: {page}")
@@ -122,21 +122,6 @@ class AIPPage:
 		elif self.section == Section.EN_ROUTE and self.document == EMERGENCY_DOCUMENT:
 			return PageColour.PINK
 		return None
-
-	@property
-	def cache_key(self) -> str:
-		"""Returns a unique key for caching the page content to prevent redundant downloads.
-
-		If the page is not available, the cache key is simply the page string.
-		"""
-		if not self.available or self.section == Section.AERODROME_CHARTS:
-			return self._page_text
-
-		if self.aerodrome:
-			if self.section == Section.AERODROMES:
-				return f"{self.section}_{self.aerodrome}"
-
-		return f"{self.section}_{self.subsection}_{self.document}"
 
 	@property
 	def simple_url(self) -> Optional[str]:
@@ -162,6 +147,23 @@ class AIPPage:
 			return None
 
 		return url_pattern.format(subsection=self.subsection, subsection_name=section_name, document=self.document)
+
+def categorise_pages(pages: Iterable[AIPPage]) -> tuple[dict[PageColour, dict[str, list[AIPPage]]], list[AIPPage]]:
+	"""Collects the AIP pages by colour and URL.
+
+	Pages that do not have a predictable URL are returned in the second element of the tuple.
+	"""
+	collected: dict[PageColour | None, dict[str, list[AIPPage]]] = {}
+	uncollected: list[AIPPage] = []
+
+	for page in pages:
+		url = page.simple_url
+		if url is None:
+			uncollected.append(page)
+		else:
+			collected.setdefault(page.colour, {}).setdefault(url, []).append(page)
+	
+	return collected, uncollected
 
 
 
