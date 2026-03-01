@@ -55,7 +55,6 @@ SECTION_URL_PATTERNS: dict[Section, str] = {
 	Section.AERODROMES: BASE_URL + "Aerodromes-AD1/{subsection_name}/AD_{subsection}.{document:02d}.pdf",
 }
 AERODROME_URL = BASE_URL + "Aerodromes-AD1/AERODROMES/{aerodrome}_AD2.pdf"
-AERODROME_CHARTS_URL = BASE_URL + "Aerodrome-Charts/{name}-{icao}/{icao}_{document}.{chart}.pdf"
 
 class AIPPage:
 	_page_text: str
@@ -131,7 +130,7 @@ class AIPPage:
 		return None
 
 	@property
-	def simple_url(self) -> Optional[str]:
+	def url(self) -> Optional[str]:
 		"""Returns the URL for the page purely based on the page information.
 
 		:return: the URL for the page, or None if it cannot be determined lexically
@@ -145,16 +144,9 @@ class AIPPage:
 
 		# Charts
 		if self.section == Section.AERODROME_CHARTS and self.aerodrome is not None:
-			aerodrome_name = aerodromes.AERODROME_ICAO_MAP.get(self.aerodrome)
-			if aerodrome_name is None:
-				return None
-
-			return AERODROME_CHARTS_URL.format(
-				name=aerodrome_name,
-				icao=self.aerodrome,
-				document=self.document,
-				chart=self.page_number,
-			)
+			a = self._chart_url()
+			print(a)
+			return a
 
 		section_name = SUBSECTION_NAMES.get(self.section, {}).get(self.subsection)
 		if section_name is None:
@@ -170,6 +162,35 @@ class AIPPage:
 			document=self.document
 		)
 
+	def _chart_url(self) -> Optional[str]:
+		"""Returns the URL for a chart page, which is based on the aerodrome and document number."""
+		if self.aerodrome is None:
+			return None
+
+		aerodrome_charts = aerodromes.AERODROME_CHART_DATA.get(self.aerodrome)
+		if aerodrome_charts is None:
+			return None
+
+		# search the list of charts for the one with the correct document and page number
+		# e.g 51.1
+		chart_file = None
+		for chart in aerodrome_charts:
+			match = re.findall(r"(\d+)\.(\d+)([YG]?)", chart)
+			if not match:
+				continue
+
+			for doc_num_str, page_num_str, flags in match:
+				doc_num = int(doc_num_str)
+				page_num = int(page_num_str)
+				if doc_num == self.document and page_num == self.page_number:
+					chart_file = chart
+					break
+
+		if chart_file is not None:
+			return BASE_URL + "Aerodrome-Charts/" + chart_file + '.pdf'
+
+		return None
+
 def categorise_pages(pages: Iterable[AIPPage]) -> tuple[dict[PageColour, dict[str, list[AIPPage]]], list[AIPPage]]:
 	"""Collects the AIP pages by colour and URL.
 
@@ -179,7 +200,7 @@ def categorise_pages(pages: Iterable[AIPPage]) -> tuple[dict[PageColour, dict[st
 	uncollected: list[AIPPage] = []
 
 	for page in pages:
-		url = page.simple_url
+		url = page.url
 		if url is None:
 			uncollected.append(page)
 		else:

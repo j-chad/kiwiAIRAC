@@ -1,0 +1,1368 @@
+{
+	"NZLX": [
+		"Alexandra-NZLX/NZLX_45.1",
+		"Alexandra-NZLX/NZLX_51.1_52.1",
+		"Alexandra-NZLX/NZLX_52.2",
+		"Alexandra-NZLX/NZLX_62.1"
+	],
+	"NZAN": [
+		"Anama-NZAN/NZAN_51.1_52.1"
+	],
+	"NZAR": [
+		"Ardmore-NZAR/NZAR_31.1_31.2",
+		"Ardmore-NZAR/NZAR_31.3_31.4",
+		"Ardmore-NZAR/NZAR_31.5",
+		"Ardmore-NZAR/NZAR_31.6",
+		"Ardmore-NZAR/NZAR_33.1_33.2",
+		"Ardmore-NZAR/NZAR_33.3_33.4",
+		"Ardmore-NZAR/NZAR_35.1_35.2",
+		"Ardmore-NZAR/NZAR_35.3_35.4",
+		"Ardmore-NZAR/NZAR_35.5_35.6",
+		"Ardmore-NZAR/NZAR_35.7_35.8",
+		"Ardmore-NZAR/NZAR_35.9_35.10",
+		"Ardmore-NZAR/NZAR_45.1",
+		"Ardmore-NZAR/NZAR_45.2_45.3",
+		"Ardmore-NZAR/NZAR_51.1_51.2",
+		"Ardmore-NZAR/NZAR_52.1_52.2",
+		"Ardmore-NZAR/NZAR_53.1_53.2",
+		"Ardmore-NZAR/NZAR_62.1_62.2",
+		"Ardmore-NZAR/NZAR_62.3_62.4",
+		"Ardmore-NZAR/NZAR_62.5_62.6",
+		"Ardmore-NZAR/NZAR_62.7"
+	],
+	"NZAS": [
+		"Ashburton-NZAS/NZAS_51.1_52.1",
+		"Ashburton-NZAS/NZAS_52.2"
+	],
+	"NZAM": [
+		"Ashburton_Medical-Centre-NZAM/NZAM_45.1",
+		"Ashburton_Medical-Centre-NZAM/NZAM_51.1_52.1",
+		"Ashburton_Medical-Centre-NZAM/NZAM_62.1"
+	],
+	"NZAA": [
+		"Auckland-NZAA/NZAA_31.01_31.02",
+		"Auckland-NZAA/NZAA_31.03_31.04",
+		"Auckland-NZAA/NZAA_31.05_31.06",
+		"Auckland-NZAA/NZAA_31.07_31.08",
+		"Auckland-NZAA/NZAA_31.09_31.10",
+		"Auckland-NZAA/NZAA_31.11_31.12",
+		"Auckland-NZAA/NZAA_31.13_31.14",
+		"Auckland-NZAA/NZAA_33.01_33.02",
+		"Auckland-NZAA/NZAA_33.03_33.04",
+		"Auckland-NZAA/NZAA_33.05_33.06",
+		"Auckland-NZAA/NZAA_33.07_33.08",
+		"Auckland-NZAA/NZAA_33.09_33.10",
+		"Auckland-NZAA/NZAA_33.11_33.12",
+		"Auckland-NZAA/NZAA_33.13_33.14",
+		"Auckland-NZAA/NZAA_33.15_33.16",
+		"Auckland-NZAA/NZAA_33.17_33.18",
+		"Auckland-NZAA/NZAA_33.19_33.20",
+		"Auckland-NZAA/NZAA_33.21_33.22",
+		"Auckland-NZAA/NZAA_33.23",
+		"Auckland-NZAA/NZAA_34.1_34.2",
+		"Auckland-NZAA/NZAA_35.1_35.2",
+		"Auckland-NZAA/NZAA_41.1_41.2",
+		"Auckland-NZAA/NZAA_41.3",
+		"Auckland-NZAA/NZAA_43.1_43.2",
+		"Auckland-NZAA/NZAA_45.1_45.2",
+		"Auckland-NZAA/NZAA_45.3_45.4",
+		"Auckland-NZAA/NZAA_45.5_45.6",
+		"Auckland-NZAA/NZAA_45.7_45.8",
+		"Auckland-NZAA/NZAA_45.9",
+		"Auckland-NZAA/NZAA_51.1_51.2",
+		"Auckland-NZAA/NZAA_52.1",
+		"Auckland-NZAA/NZAA_53.01",
+		"Auckland-NZAA/NZAA_53.02_53.03",
+		"Auckland-NZAA/NZAA_53.04_53.05",
+		"Auckland-NZAA/NZAA_53.06_53.07",
+		"Auckland-NZAA/NZAA_53.08_53.09",
+		"Auckland-NZAA/NZAA_53.10",
+		"Auckland-NZAA/NZAA_53.11",
+		"Auckland-NZAA/NZAA_53.12_53.13",
+		"Auckland-NZAA/NZAA_53.14_53.15",
+		"Auckland-NZAA/NZAA_53.16_53.17",
+		"Auckland-NZAA/NZAA_54.1_54.2",
+		"Auckland-NZAA/NZAA_61.1",
+		"Auckland-NZAA/NZAA_62.01_62.02",
+		"Auckland-NZAA/NZAA_62.03_62.04",
+		"Auckland-NZAA/NZAA_62.05_62.06",
+		"Auckland-NZAA/NZAA_62.07_62.08",
+		"Auckland-NZAA/NZAA_62.09_62.10",
+		"Auckland-NZAA/NZAA_62.11_62.12",
+		"Auckland-NZAA/NZAA_62.13_62.14",
+		"Auckland-NZAA/NZAA_62.15_62.16",
+		"Auckland-NZAA/NZAA_62.17_62.18",
+		"Auckland-NZAA/NZAA_62.19_62.20",
+		"Auckland-NZAA/NZAA_62.21",
+		"Auckland-NZAA/NZAA_64.1",
+		"Auckland-NZAA/NZAA_70.01Y_70.02Y",
+		"Auckland-NZAA/NZAA_70.03Y_70.04Y",
+		"Auckland-NZAA/NZAA_70.05Y",
+		"Auckland-NZAA/NZAA_70.10Y_70.11Y",
+		"Auckland-NZAA/NZAA_70.14Y",
+		"Auckland-NZAA/NZAA_70.21Y_70.22Y",
+		"Auckland-NZAA/NZAA_70.23Y_70.24Y",
+		"Auckland-NZAA/NZAA_70.25Y",
+		"Auckland-NZAA/NZAA_70.30Y_70.31Y",
+		"Auckland-NZAA/NZAA_70.34Y"
+	],
+	"NZAW": [
+		"Auckland_Harbour-NZAW/NZAW"
+	],
+	"NZJL": [
+		"Auckland_Hospital-NZJL/NZJL_45.1",
+		"Auckland_Hospital-NZJL/NZJL_51.1_52.1",
+		"Auckland_Hospital-NZJL/NZJL_62.1"
+	],
+	"NZBA": [
+		"Balclutha-NZBA/NZBA_45.1",
+		"Balclutha-NZBA/NZBA_51.1_52.1",
+		"Balclutha-NZBA/NZBA_62.1"
+	],
+	"NZJI": [
+		"Bay-of-Islands-Hospital-NZJI/NZJI_45.1",
+		"Bay-of-Islands-Hospital-NZJI/NZJI_51.1_52.1"
+	],
+	"NZBW": [
+		"Burwood-Hospital-NZBW/NZBW_51.1_52.1"
+	],
+	"NZCG": [
+		"Centennial-Park-NZCG/NZCG_51.1_52.1"
+	],
+	"NZCB": [
+		"Centre-Bush-NZCB/NZCB"
+	],
+	"NZCI": [
+		"Chatham-Is-Tuuta-NZCI/NZCI_44.1",
+		"Chatham-Is-Tuuta-NZCI/NZCI_45.1_45.2",
+		"Chatham-Is-Tuuta-NZCI/NZCI_51.1_52.1",
+		"Chatham-Is-Tuuta-NZCI/NZCI_52.2",
+		"Chatham-Is-Tuuta-NZCI/NZCI_62.1"
+	],
+	"NZCV": [
+		"Cheviot-NZCV/NZCV_45.1",
+		"Cheviot-NZCV/NZCV_51.1_52.1",
+		"Cheviot-NZCV/NZCV_62.1"
+	],
+	"NZCH": [
+		"Christchurch-NZCH/NZCH_31.1_31.2",
+		"Christchurch-NZCH/NZCH_31.3",
+		"Christchurch-NZCH/NZCH_31.4Y_31.5Y",
+		"Christchurch-NZCH/NZCH_31.6Y",
+		"Christchurch-NZCH/NZCH_33.01_33.02",
+		"Christchurch-NZCH/NZCH_33.03_33.04",
+		"Christchurch-NZCH/NZCH_33.05_33.06",
+		"Christchurch-NZCH/NZCH_33.07_33.08",
+		"Christchurch-NZCH/NZCH_33.09_33.10",
+		"Christchurch-NZCH/NZCH_33.11_33.12",
+		"Christchurch-NZCH/NZCH_33.13_33.14",
+		"Christchurch-NZCH/NZCH_33.15_33.16",
+		"Christchurch-NZCH/NZCH_33.17_33.18",
+		"Christchurch-NZCH/NZCH_33.19_33.20",
+		"Christchurch-NZCH/NZCH_33.21_33.22",
+		"Christchurch-NZCH/NZCH_33.23_33.24",
+		"Christchurch-NZCH/NZCH_33.25_33.26",
+		"Christchurch-NZCH/NZCH_33.27_33.28",
+		"Christchurch-NZCH/NZCH_35.1_35.2",
+		"Christchurch-NZCH/NZCH_35.3_35.4",
+		"Christchurch-NZCH/NZCH_41.1_41.2",
+		"Christchurch-NZCH/NZCH_43.1_43.2",
+		"Christchurch-NZCH/NZCH_45.01_45.02",
+		"Christchurch-NZCH/NZCH_45.03_45.04",
+		"Christchurch-NZCH/NZCH_45.05_45.06",
+		"Christchurch-NZCH/NZCH_45.07_45.08",
+		"Christchurch-NZCH/NZCH_45.09",
+		"Christchurch-NZCH/NZCH_45.10_45.11",
+		"Christchurch-NZCH/NZCH_45.12_45.13",
+		"Christchurch-NZCH/NZCH_51.1_51.2",
+		"Christchurch-NZCH/NZCH_52.1",
+		"Christchurch-NZCH/NZCH_52.2_52.3",
+		"Christchurch-NZCH/NZCH_52.4_52.5",
+		"Christchurch-NZCH/NZCH_52.6",
+		"Christchurch-NZCH/NZCH_53.1_53.2",
+		"Christchurch-NZCH/NZCH_53.3_53.4",
+		"Christchurch-NZCH/NZCH_53.5_53.6",
+		"Christchurch-NZCH/NZCH_53.7",
+		"Christchurch-NZCH/NZCH_53.8_53.9",
+		"Christchurch-NZCH/NZCH_54.1_54.2",
+		"Christchurch-NZCH/NZCH_61.1_61.2",
+		"Christchurch-NZCH/NZCH_62.01_62.02",
+		"Christchurch-NZCH/NZCH_62.03_62.04",
+		"Christchurch-NZCH/NZCH_62.05_62.06",
+		"Christchurch-NZCH/NZCH_62.07_62.08",
+		"Christchurch-NZCH/NZCH_62.09_62.10",
+		"Christchurch-NZCH/NZCH_62.11_62.12",
+		"Christchurch-NZCH/NZCH_64.1_64.2",
+		"Christchurch-NZCH/NZCH_64.3_64.4",
+		"Christchurch-NZCH/NZCH_70.01Y_70.02Y",
+		"Christchurch-NZCH/NZCH_70.03Y",
+		"Christchurch-NZCH/NZCH_70.10Y_70.11Y",
+		"Christchurch-NZCH/NZCH_70.12Y_70.14Y",
+		"Christchurch-NZCH/NZCH_70.21Y_70.22Y",
+		"Christchurch-NZCH/NZCH_70.23Y_70.24Y",
+		"Christchurch-NZCH/NZCH_70.25Y",
+		"Christchurch-NZCH/NZCH_70.30Y_70.31Y",
+		"Christchurch-NZCH/NZCH_70.32Y_70.34Y"
+	],
+	"NZJC": [
+		"Christchurch_Hospital-NZJC/NZJC_45.1_45.2",
+		"Christchurch_Hospital-NZJC/NZJC_51.1_52.1",
+		"Christchurch_Hospital-NZJC/NZJC_52.2",
+		"Christchurch_Hospital-NZJC/NZJC_62.1"
+	],
+	"NZJJ": [
+		"Christchurch_Hospital_Hagley-NZJJ/NZJJ"
+	],
+	"NZCL": [
+		"Cloudy-Bay-NZCL/NZCL_51.1_52.1"
+	],
+	"NZCX": [
+		"Coromandel-NZCX/NZCX_45.1",
+		"Coromandel-NZCX/NZCX_51.1_52.1",
+		"Coromandel-NZCX/NZCX_62.1"
+	],
+	"NZCW": [
+		"Cromwell-NZCW/NZCW"
+	],
+	"NZCS": [
+		"Cromwell-Racecourse-NZCS/NZCS_51.1_52.1"
+	],
+	"NZDV": [
+		"Dannevirke-NZDV/NZDV_51.1_52.1"
+	],
+	"NZDA": [
+		"Dargaville-NZDA/NZDA_51.1_52.1"
+	],
+	"NZJE": [
+		"Dargaville_Hospital-NZJE/NZJE_45.1",
+		"Dargaville_Hospital-NZJE/NZJE_51.1_52.1"
+	],
+	"NZDY": [
+		"Drury-NZDY/NZDY_51.1_52.1"
+	],
+	"NZDN": [
+		"Dunedin-NZDN/NZDN_31.1_32.1",
+		"Dunedin-NZDN/NZDN_33.1_33.2",
+		"Dunedin-NZDN/NZDN_33.3",
+		"Dunedin-NZDN/NZDN_33.4_33.5",
+		"Dunedin-NZDN/NZDN_33.6_33.7",
+		"Dunedin-NZDN/NZDN_35.1_35.2",
+		"Dunedin-NZDN/NZDN_41.1_41.2",
+		"Dunedin-NZDN/NZDN_44.1_44.2",
+		"Dunedin-NZDN/NZDN_44.3",
+		"Dunedin-NZDN/NZDN_45.1_45.2",
+		"Dunedin-NZDN/NZDN_51.1_52.1",
+		"Dunedin-NZDN/NZDN_52.2_53.1",
+		"Dunedin-NZDN/NZDN_61.1",
+		"Dunedin-NZDN/NZDN_62.1_62.2",
+		"Dunedin-NZDN/NZDN_62.3_62.4",
+		"Dunedin-NZDN/NZDN_62.5_62.6",
+		"Dunedin-NZDN/NZDN_62.7_62.8",
+		"Dunedin-NZDN/NZDN_62.9_62.10",
+		"Dunedin-NZDN/NZDN_64.1_64.2"
+	],
+	"NZDC": [
+		"Dunedin_City-NZDC/NZDC"
+	],
+	"NZDH": [
+		"Dunedin_Hospital-NZDH/NZDH_33.1",
+		"Dunedin_Hospital-NZDH/NZDH_45.1",
+		"Dunedin_Hospital-NZDH/NZDH_51.1_52.1",
+		"Dunedin_Hospital-NZDH/NZDH_62.1"
+	],
+	"NZDU": [
+		"Dunstan_Hospital-NZDU/NZDU_33.1_45.1",
+		"Dunstan_Hospital-NZDU/NZDU_51.1_52.1",
+		"Dunstan_Hospital-NZDU/NZDU_62.1_62.2"
+	],
+	"NZEV": [
+		"Eves-Valley-NZEV/NZEV"
+	],
+	"NZFI": [
+		"Feilding-NZFI/NZFI_51.1_51.2",
+		"Feilding-NZFI/NZFI_52.1"
+	],
+	"NZFG": [
+		"Fern-Gully-NZFG/NZFG"
+	],
+	"NZFE": [
+		"Fernside-Fields-NZFE/NZFE"
+	],
+	"NZFT": [
+		"Flat-Point-NZFT/NZFT_51.1_52.1"
+	],
+	"NZFF": [
+		"Forest-Field-NZFF/NZFF_51.1_52.1"
+	],
+	"NZFH": [
+		"Fox-NZFH/NZFH_51.1_52.1"
+	],
+	"NZFO": [
+		"Fox2Glacier-NZFO/NZFO_51.1_52.1"
+	],
+	"NZFR": [
+		"Fox3River-NZFR/NZFR_51.1_52.1"
+	],
+	"NZFP": [
+		"Foxpine-NZFP/NZFP"
+	],
+	"NZFJ": [
+		"Franz-Josef-NZFJ/NZFJ_51.1_52.1"
+	],
+	"NZGA": [
+		"Galatea-NZGA/NZGA"
+	],
+	"NZGD": [
+		"Geraldine-NZGD/NZGD_45.1",
+		"Geraldine-NZGD/NZGD_51.1_52.1",
+		"Geraldine-NZGD/NZGD_62.1"
+	],
+	"NZGS": [
+		"Gisborne-NZGS/NZGS_31.1",
+		"Gisborne-NZGS/NZGS_32.1_33.1",
+		"Gisborne-NZGS/NZGS_33.2_33.3",
+		"Gisborne-NZGS/NZGS_33.4_33.5",
+		"Gisborne-NZGS/NZGS_43.1",
+		"Gisborne-NZGS/NZGS_43.2_43.3",
+		"Gisborne-NZGS/NZGS_45.1_45.2",
+		"Gisborne-NZGS/NZGS_45.3_45.4",
+		"Gisborne-NZGS/NZGS_51.1_51.2",
+		"Gisborne-NZGS/NZGS_52.1_52.2",
+		"Gisborne-NZGS/NZGS_53.1_53.2",
+		"Gisborne-NZGS/NZGS_62.1_62.2",
+		"Gisborne-NZGS/NZGS_62.3_62.4",
+		"Gisborne-NZGS/NZGS_62.5_62.6",
+		"Gisborne-NZGS/NZGS_62.7_62.8"
+	],
+	"NZJG": [
+		"Gisborne_Hospital-NZJG/NZJG"
+	],
+	"NZGH": [
+		"Glacier-Country-NZGH/NZGH_35.1_35.2",
+		"Glacier-Country-NZGH/NZGH_51.1_51.2",
+		"Glacier-Country-NZGH/NZGH_52.1_53.1"
+	],
+	"NZGY": [
+		"Glenorchy-NZGY/NZGY_51.1_52.1"
+	],
+	"NZGT": [
+		"Glentanner-NZGT/NZGT_45.1",
+		"Glentanner-NZGT/NZGT_51.1_52.1",
+		"Glentanner-NZGT/NZGT_62.1"
+	],
+	"NZGC": [
+		"Gore-NZGC/NZGC_51.1_52.1"
+	],
+	"NZGO": [
+		"Gore2Hospital-NZGO/NZGO_45.1",
+		"Gore2Hospital-NZGO/NZGO_51.1_52.1",
+		"Gore2Hospital-NZGO/NZGO_62.1"
+	],
+	"NZGB": [
+		"Great-Barrier-NZGB/NZGB_45.1",
+		"Great-Barrier-NZGB/NZGB_45.2_45.3",
+		"Great-Barrier-NZGB/NZGB_51.1_52.1",
+		"Great-Barrier-NZGB/NZGB_52.2",
+		"Great-Barrier-NZGB/NZGB_62.1_62.2"
+	],
+	"NZGM": [
+		"Greymouth-NZGM/NZGM_33.1_45.1",
+		"Greymouth-NZGM/NZGM_51.1_52.1",
+		"Greymouth-NZGM/NZGM_62.1_62.2",
+		"Greymouth-NZGM/NZGM_62.3_62.4"
+	],
+	"NZHT": [
+		"Haast-NZHT/NZHT_33.1",
+		"Haast-NZHT/NZHT_45.1_45.2",
+		"Haast-NZHT/NZHT_51.1_52.1",
+		"Haast-NZHT/NZHT_62.1_62.2"
+	],
+	"NZHN": [
+		"Hamilton-NZHN/NZHN_32.1",
+		"Hamilton-NZHN/NZHN_33.1_33.2",
+		"Hamilton-NZHN/NZHN_33.3_33.4",
+		"Hamilton-NZHN/NZHN_33.5",
+		"Hamilton-NZHN/NZHN_33.6_33.7",
+		"Hamilton-NZHN/NZHN_33.8_33.9",
+		"Hamilton-NZHN/NZHN_35.1_35.2",
+		"Hamilton-NZHN/NZHN_35.3",
+		"Hamilton-NZHN/NZHN_43.1_43.2",
+		"Hamilton-NZHN/NZHN_43.3",
+		"Hamilton-NZHN/NZHN_43.4_43.5",
+		"Hamilton-NZHN/NZHN_45.1_45.2",
+		"Hamilton-NZHN/NZHN_45.3_45.4",
+		"Hamilton-NZHN/NZHN_51.1_51.2",
+		"Hamilton-NZHN/NZHN_52.1_52.2",
+		"Hamilton-NZHN/NZHN_53.1_53.2",
+		"Hamilton-NZHN/NZHN_61.1",
+		"Hamilton-NZHN/NZHN_62.01_62.02",
+		"Hamilton-NZHN/NZHN_62.03_62.04",
+		"Hamilton-NZHN/NZHN_62.05_62.06",
+		"Hamilton-NZHN/NZHN_62.07_62.08",
+		"Hamilton-NZHN/NZHN_62.09",
+		"Hamilton-NZHN/NZHN_64.01_64.02",
+		"Hamilton-NZHN/NZHN_64.03"
+	],
+	"NZHM": [
+		"Hanmer-NZHM/NZHM_51.1_52.1"
+	],
+	"NZHR": [
+		"Hanmer2Medical-Centre-NZHR/NZHR_45.1",
+		"Hanmer2Medical-Centre-NZHR/NZHR_51.1_52.1",
+		"Hanmer2Medical-Centre-NZHR/NZHR_62.1"
+	],
+	"NZHS": [
+		"Hastings-NZHS/NZHS_45.1_45.2",
+		"Hastings-NZHS/NZHS_51.1_51.2",
+		"Hastings-NZHS/NZHS_52.1_52.2",
+		"Hastings-NZHS/NZHS_62.1_62.2",
+		"Hastings-NZHS/NZHS_62.3_62.4"
+	],
+	"NZJH": [
+		"Hastings_Hospital-NZJH/NZJH_51.1_52.1"
+	],
+	"NZHA": [
+		"Hawera-NZHA/NZHA_31.1",
+		"Hawera-NZHA/NZHA_45.1",
+		"Hawera-NZHA/NZHA_51.1_52.1"
+	],
+	"NZHB": [
+		"Helena-Bay-NZHB/NZHB_45.1_62.1"
+	],
+	"NZHK": [
+		"Hokitika-NZHK/NZHK_33.1_33.2",
+		"Hokitika-NZHK/NZHK_44.1_44.2",
+		"Hokitika-NZHK/NZHK_44.3",
+		"Hokitika-NZHK/NZHK_45.1_45.2",
+		"Hokitika-NZHK/NZHK_51.1_52.1",
+		"Hokitika-NZHK/NZHK_52.2",
+		"Hokitika-NZHK/NZHK_62.01",
+		"Hokitika-NZHK/NZHK_62.02_62.03",
+		"Hokitika-NZHK/NZHK_62.4_62.5"
+	],
+	"NZHF": [
+		"Huka-Falls-NZHF/NZHF_51.1_52.1"
+	],
+	"NZNV": [
+		"Invercargill-NZNV/NZNV_31.1",
+		"Invercargill-NZNV/NZNV_32.1_33.1",
+		"Invercargill-NZNV/NZNV_33.2_33.3",
+		"Invercargill-NZNV/NZNV_33.4_33.5",
+		"Invercargill-NZNV/NZNV_43.1_43.2",
+		"Invercargill-NZNV/NZNV_43.3_43.4",
+		"Invercargill-NZNV/NZNV_45.1_45.2",
+		"Invercargill-NZNV/NZNV_51.1_51.2",
+		"Invercargill-NZNV/NZNV_52.1_52.2",
+		"Invercargill-NZNV/NZNV_53.1",
+		"Invercargill-NZNV/NZNV_62.1_62.2"
+	],
+	"NZKO": [
+		"Kaikohe-NZKO/NZKO"
+	],
+	"NZKI": [
+		"Kaikoura-NZKI/NZKI_31.1",
+		"Kaikoura-NZKI/NZKI_31.2_44.1",
+		"Kaikoura-NZKI/NZKI_51.1_52.1"
+	],
+	"NZKJ": [
+		"Kaikoura_Beachfront-NZKJ/NZKJ_51.1_52.1"
+	],
+	"NZKC": [
+		"Kaikoura_Medical-Centre-NZKC/NZKC_45.1",
+		"Kaikoura_Medical-Centre-NZKC/NZKC_51.1_52.1",
+		"Kaikoura_Medical-Centre-NZKC/NZKC_62.1"
+	],
+	"NZKF": [
+		"Kaipara-Flats-NZKF/NZKF_51.1_52.1"
+	],
+	"NZKT": [
+		"Kaitaia-NZKT/NZKT_33.1_33.2",
+		"Kaitaia-NZKT/NZKT_44.1_44.2",
+		"Kaitaia-NZKT/NZKT_45.1_45.2",
+		"Kaitaia-NZKT/NZKT_51.1_52.1",
+		"Kaitaia-NZKT/NZKT_61.1",
+		"Kaitaia-NZKT/NZKT_62.1_62.2"
+	],
+	"NZJK": [
+		"Kaitaia_Hospital-NZJK/NZJK_45.1",
+		"Kaitaia_Hospital-NZJK/NZJK_51.1_52.1",
+		"Kaitaia_Hospital-NZJK/NZJK_62.1"
+	],
+	"NZKM": [
+		"Karamea-NZKM/NZKM_45.1",
+		"Karamea-NZKM/NZKM_51.1_52.1",
+		"Karamea-NZKM/NZKM_62.1"
+	],
+	"NZWE": [
+		"Kauaroa-Bay-NZWE/NZWE_51.1_52.1"
+	],
+	"NZKH": [
+		"Kenepuru-Hospital-NZKH/NZKH"
+	],
+	"NZKN": [
+		"Kensington-Park-NZKN/NZKN"
+	],
+	"NZKK": [
+		"Kerikeri-Bay-of-Islands-NZKK/NZKK_31.1_31.2",
+		"Kerikeri-Bay-of-Islands-NZKK/NZKK_33.1_33.2",
+		"Kerikeri-Bay-of-Islands-NZKK/NZKK_45.1_45.2",
+		"Kerikeri-Bay-of-Islands-NZKK/NZKK_51.1_51.2",
+		"Kerikeri-Bay-of-Islands-NZKK/NZKK_52.1_52.2",
+		"Kerikeri-Bay-of-Islands-NZKK/NZKK_53.1",
+		"Kerikeri-Bay-of-Islands-NZKK/NZKK_61.1",
+		"Kerikeri-Bay-of-Islands-NZKK/NZKK_62.1_62.2",
+		"Kerikeri-Bay-of-Islands-NZKK/NZKK_62.3"
+	],
+	"NZKP": [
+		"Koputaroa-NZKP/NZKP_51.1_52.1"
+	],
+	"NZKY": [
+		"Kowhai-NZKY/NZKY_51.1_52.1"
+	],
+	"NZKU": [
+		"Kupe-NZKU/NZKU_45.1"
+	],
+	"NZHP": [
+		"Lake-Haupiri-NZHP/NZHP"
+	],
+	"NZLE": [
+		"Lake-Station-Nelson-Lakes-NZLE/NZLE_51.1_51.2",
+		"Lake-Station-Nelson-Lakes-NZLE/NZLE_52.1"
+	],
+	"NZLA": [
+		"Loburn-Abbey-NZLA/NZLA_51.1_52.1"
+	],
+	"NZLM": [
+		"Lumsden-Medical-Centre-NZLM/NZLM_45.1",
+		"Lumsden-Medical-Centre-NZLM/NZLM_51.1_52.1",
+		"Lumsden-Medical-Centre-NZLM/NZLM_62.1"
+	],
+	"NZMW": [
+		"Makarora-NZMW/NZMW"
+	],
+	"NZOG": [
+		"Makarora_Heliport-NZOG/NZOG"
+	],
+	"NZVL": [
+		"Mandeville-NZVL/NZVL_51.1_52.1"
+	],
+	"NZMG": [
+		"Mangonui-NZMG/NZMG_45.1"
+	],
+	"NZSO": [
+		"Marlborough-Sounds-NZSO/NZSO"
+	],
+	"NZMJ": [
+		"Martins-Bay-NZMJ/NZMJ_33.1_45.1",
+		"Martins-Bay-NZMJ/NZMJ_51.1_52.1",
+		"Martins-Bay-NZMJ/NZMJ_62.1"
+	],
+	"NZMS": [
+		"Masterton-NZMS/NZMS_33.1",
+		"Masterton-NZMS/NZMS_45.1_45.2",
+		"Masterton-NZMS/NZMS_51.1_51.2",
+		"Masterton-NZMS/NZMS_52.1_52.2",
+		"Masterton-NZMS/NZMS_61.1",
+		"Masterton-NZMS/NZMS_62.1_62.2",
+		"Masterton-NZMS/NZMS_62.3_62.4"
+	],
+	"NZMA": [
+		"Matamata-NZMA/NZMA_51.1_51.2",
+		"Matamata-NZMA/NZMA_52.1",
+		"Matamata-NZMA/NZMA_55.1"
+	],
+	"NZMB": [
+		"Mechanics-Bay-NZMB/NZMB_51.1_52.1"
+	],
+	"NZME": [
+		"Mercer-NZME/NZME_51.1_52.1"
+	],
+	"NZMV": [
+		"Methven-NZMV/NZMV_45.1",
+		"Methven-NZMV/NZMV_51.1",
+		"Methven-NZMV/NZMV_62.1"
+	],
+	"NZML": [
+		"Mid-Waiho-Loop-NZML/NZML"
+	],
+	"NZMM": [
+		"Middlemore_Hospital-NZMM/NZMM_51.1_52.1"
+	],
+	"NZMF": [
+		"Milford-Sound-NZMF/NZMF_31.1_31.2",
+		"Milford-Sound-NZMF/NZMF_31.3",
+		"Milford-Sound-NZMF/NZMF_31.4",
+		"Milford-Sound-NZMF/NZMF_51.1_51.2",
+		"Milford-Sound-NZMF/NZMF_52.1"
+	],
+	"NZKD": [
+		"Motu-Kaikoura-Island-NZKD/NZKD_51.1_52.1"
+	],
+	"NZMK": [
+		"Motueka-NZMK/NZMK_51.1_52.1"
+	],
+	"NZMC": [
+		"Mount-Cook-NZMC/NZMC_35.1",
+		"Mount-Cook-NZMC/NZMC_51.1_52.1",
+		"Mount-Cook-NZMC/NZMC_53.1",
+		"Mount-Cook-NZMC/NZMC_61.1"
+	],
+	"NZMR": [
+		"Murchison-NZMR/NZMR_51.1_52.1"
+	],
+	"NZUR": [
+		"Murchison_Hospital-NZUR/NZUR"
+	],
+	"NZNR": [
+		"Napier-NZNR/NZNR_31.1_32.1",
+		"Napier-NZNR/NZNR_33.1",
+		"Napier-NZNR/NZNR_33.2_33.3",
+		"Napier-NZNR/NZNR_35.1_35.2",
+		"Napier-NZNR/NZNR_43.1_43.2",
+		"Napier-NZNR/NZNR_43.3_43.4",
+		"Napier-NZNR/NZNR_45.1_45.2",
+		"Napier-NZNR/NZNR_51.1_51.2",
+		"Napier-NZNR/NZNR_52.1_52.2",
+		"Napier-NZNR/NZNR_53.1",
+		"Napier-NZNR/NZNR_61.1",
+		"Napier-NZNR/NZNR_62.1_62.2",
+		"Napier-NZNR/NZNR_62.3_62.4",
+		"Napier-NZNR/NZNR_62.5",
+		"Napier-NZNR/NZNR_62.6_62.7",
+		"Napier-NZNR/NZNR_64.1_64.2"
+	],
+	"NZNS": [
+		"Nelson-NZNS/NZNS_31.1_32.1",
+		"Nelson-NZNS/NZNS_33.1_33.2",
+		"Nelson-NZNS/NZNS_33.3",
+		"Nelson-NZNS/NZNS_33.4_33.5",
+		"Nelson-NZNS/NZNS_35.1",
+		"Nelson-NZNS/NZNS_43.1_43.2",
+		"Nelson-NZNS/NZNS_45.1_45.2",
+		"Nelson-NZNS/NZNS_45.3_45.4",
+		"Nelson-NZNS/NZNS_51.1_51.2",
+		"Nelson-NZNS/NZNS_52.1_52.2",
+		"Nelson-NZNS/NZNS_53.1_53.2",
+		"Nelson-NZNS/NZNS_61.1",
+		"Nelson-NZNS/NZNS_62.01_62.02",
+		"Nelson-NZNS/NZNS_62.03_62.04",
+		"Nelson-NZNS/NZNS_62.05",
+		"Nelson-NZNS/NZNS_62.06_62.07",
+		"Nelson-NZNS/NZNS_62.08_62.09",
+		"Nelson-NZNS/NZNS_62.10",
+		"Nelson-NZNS/NZNS_64.1_64.2"
+	],
+	"NZNH": [
+		"Nelson_Hospital-NZNH/NZNH"
+	],
+	"NZNP": [
+		"New-Plymouth-NZNP/NZNP_32.1_33.1",
+		"New-Plymouth-NZNP/NZNP_33.2_33.3",
+		"New-Plymouth-NZNP/NZNP_33.4_33.5",
+		"New-Plymouth-NZNP/NZNP_33.6",
+		"New-Plymouth-NZNP/NZNP_35.1_35.2",
+		"New-Plymouth-NZNP/NZNP_35.3",
+		"New-Plymouth-NZNP/NZNP_43.1_43.2",
+		"New-Plymouth-NZNP/NZNP_43.3_43.4",
+		"New-Plymouth-NZNP/NZNP_45.1_45.2",
+		"New-Plymouth-NZNP/NZNP_51.1_51.2",
+		"New-Plymouth-NZNP/NZNP_52.1_52.2",
+		"New-Plymouth-NZNP/NZNP_53.1",
+		"New-Plymouth-NZNP/NZNP_61.1",
+		"New-Plymouth-NZNP/NZNP_62.01_62.02",
+		"New-Plymouth-NZNP/NZNP_62.03_62.04",
+		"New-Plymouth-NZNP/NZNP_62.05",
+		"New-Plymouth-NZNP/NZNP_62.06_62.07",
+		"New-Plymouth-NZNP/NZNP_62.08_62.09"
+	],
+	"NZNF": [
+		"Norfolk-NZNF/NZNF_51.1_52.1"
+	],
+	"NZNE": [
+		"North-Shore-NZNE/NZNE_31.1_31.2",
+		"North-Shore-NZNE/NZNE_31.3_33.1",
+		"North-Shore-NZNE/NZNE_35.1_35.2",
+		"North-Shore-NZNE/NZNE_45.1_45.2",
+		"North-Shore-NZNE/NZNE_51.1_51.2",
+		"North-Shore-NZNE/NZNE_52.1_52.2",
+		"North-Shore-NZNE/NZNE_61.1_62.1"
+	],
+	"NZJN": [
+		"North-Shore_Hospital-NZJN/NZJN_51.1_52.1"
+	],
+	"NZOU": [
+		"Oamaru-NZOU/NZOU_45.1_45.2",
+		"Oamaru-NZOU/NZOU_51.1_52.1",
+		"Oamaru-NZOU/NZOU_52.2",
+		"Oamaru-NZOU/NZOU_62.1"
+	],
+	"NZOR": [
+		"Oamaru_Hospital-NZOR/NZOR_45.1",
+		"Oamaru_Hospital-NZOR/NZOR_51.1_52.1",
+		"Oamaru_Hospital-NZOR/NZOR_62.1"
+	],
+	"NZON": [
+		"Oban-NZON/NZON_45.1",
+		"Oban-NZON/NZON_51.1_52.1",
+		"Oban-NZON/NZON_62.1"
+	],
+	"NZOB": [
+		"Ocean-Beach-NZOB/NZOB"
+	],
+	"NZOH": [
+		"Ohakea-NZOH/NZOH_31.1_31.2",
+		"Ohakea-NZOH/NZOH_32.1",
+		"Ohakea-NZOH/NZOH_33.1_33.2",
+		"Ohakea-NZOH/NZOH_35.1_35.2",
+		"Ohakea-NZOH/NZOH_35.3_35.4",
+		"Ohakea-NZOH/NZOH_41.1_41.2",
+		"Ohakea-NZOH/NZOH_43.1_43.2",
+		"Ohakea-NZOH/NZOH_43.3_43.4",
+		"Ohakea-NZOH/NZOH_45.1",
+		"Ohakea-NZOH/NZOH_45.2_45.3",
+		"Ohakea-NZOH/NZOH_45.4_45.5",
+		"Ohakea-NZOH/NZOH_51.1_51.2",
+		"Ohakea-NZOH/NZOH_52.1_52.2",
+		"Ohakea-NZOH/NZOH_52.3_52.4",
+		"Ohakea-NZOH/NZOH_52.5",
+		"Ohakea-NZOH/NZOH_53.1_53.2",
+		"Ohakea-NZOH/NZOH_53.3_53.4",
+		"Ohakea-NZOH/NZOH_61.1",
+		"Ohakea-NZOH/NZOH_62.1_62.2",
+		"Ohakea-NZOH/NZOH_62.3_62.4",
+		"Ohakea-NZOH/NZOH_62.5_62.6"
+	],
+	"NZOX": [
+		"Okiwi-Station-NZOX/NZOX_45.1",
+		"Okiwi-Station-NZOX/NZOX_51.1_52.1"
+	],
+	"NZOF": [
+		"Omaha-Flats-NZOF/NZOF_45.1",
+		"Omaha-Flats-NZOF/NZOF_51.1_52.1",
+		"Omaha-Flats-NZOF/NZOF_62.1"
+	],
+	"NZOM": [
+		"Omaka-NZOM/NZOM_31.1",
+		"Omaka-NZOM/NZOM_31.2",
+		"Omaka-NZOM/NZOM_35.1_35.2",
+		"Omaka-NZOM/NZOM_35.3",
+		"Omaka-NZOM/NZOM_51.1_51.2",
+		"Omaka-NZOM/NZOM_52.1",
+		"Omaka-NZOM/NZOM_53.1"
+	],
+	"NZOA": [
+		"Omarama-NZOA/NZOA_51.1_51.2",
+		"Omarama-NZOA/NZOA_52.1"
+	],
+	"NZOW": [
+		"Onetangi-NZOW/NZOW_45.1",
+		"Onetangi-NZOW/NZOW_51.1_52.1",
+		"Onetangi-NZOW/NZOW_62.1"
+	],
+	"NZOI": [
+		"Ongaio-Island-NZOI/NZOI_51.1_52.1"
+	],
+	"NZOP": [
+		"Opotiki-NZOP/NZOP"
+	],
+	"NZOT": [
+		"Otaki-NZOT/NZOT_51.1_52.1"
+	],
+	"NZOS": [
+		"Otehei-Bay-NZOS/NZOS"
+	],
+	"NZPA": [
+		"Paihia-NZPA/NZPA_45.1"
+	],
+	"NZPS": [
+		"Paihia_Waterfront-NZPS/NZPS_51.1_52.1"
+	],
+	"NZPM": [
+		"Palmerston-North-NZPM/NZPM_31.1",
+		"Palmerston-North-NZPM/NZPM_33.1_33.2",
+		"Palmerston-North-NZPM/NZPM_33.3",
+		"Palmerston-North-NZPM/NZPM_33.4_33.5",
+		"Palmerston-North-NZPM/NZPM_33.6_33.7",
+		"Palmerston-North-NZPM/NZPM_33.8_33.9",
+		"Palmerston-North-NZPM/NZPM_35.1_35.2",
+		"Palmerston-North-NZPM/NZPM_35.3",
+		"Palmerston-North-NZPM/NZPM_43.1_43.2",
+		"Palmerston-North-NZPM/NZPM_43.3",
+		"Palmerston-North-NZPM/NZPM_45.1_45.2",
+		"Palmerston-North-NZPM/NZPM_45.3",
+		"Palmerston-North-NZPM/NZPM_51.1_51.2",
+		"Palmerston-North-NZPM/NZPM_52.1_52.2",
+		"Palmerston-North-NZPM/NZPM_53.1_53.2",
+		"Palmerston-North-NZPM/NZPM_61.1",
+		"Palmerston-North-NZPM/NZPM_62.01_62.02",
+		"Palmerston-North-NZPM/NZPM_62.03_62.04",
+		"Palmerston-North-NZPM/NZPM_62.05_62.06",
+		"Palmerston-North-NZPM/NZPM_62.07_62.08",
+		"Palmerston-North-NZPM/NZPM_62.09_62.10",
+		"Palmerston-North-NZPM/NZPM_62.11",
+		"Palmerston-North-NZPM/NZPM_62.12_62.13",
+		"Palmerston-North-NZPM/NZPM_62.14_62.15",
+		"Palmerston-North-NZPM/NZPM_62.16_62.17",
+		"Palmerston-North-NZPM/NZPM_64.1"
+	],
+	"NZJM": [
+		"Palmerston-North_Hospital-NZJM/NZJM_51.1_52.1"
+	],
+	"NZPW": [
+		"Papawai-NZPW/NZPW_51.1_52.1"
+	],
+	"NZPI": [
+		"Parakai-NZPI/NZPI_45.1",
+		"Parakai-NZPI/NZPI_51.1_51.2",
+		"Parakai-NZPI/NZPI_52.1",
+		"Parakai-NZPI/NZPI_62.1"
+	],
+	"NZPP": [
+		"Paraparaumu-NZPP/NZPP_31.1_31.2",
+		"Paraparaumu-NZPP/NZPP_31.3_31.4",
+		"Paraparaumu-NZPP/NZPP_33.1_33.2",
+		"Paraparaumu-NZPP/NZPP_33.3_33.4",
+		"Paraparaumu-NZPP/NZPP_35.1_35.2",
+		"Paraparaumu-NZPP/NZPP_35.3_35.4",
+		"Paraparaumu-NZPP/NZPP_44.1_44.2",
+		"Paraparaumu-NZPP/NZPP_45.1_45.2",
+		"Paraparaumu-NZPP/NZPP_51.1_51.2",
+		"Paraparaumu-NZPP/NZPP_52.1_52.2",
+		"Paraparaumu-NZPP/NZPP_53.1",
+		"Paraparaumu-NZPP/NZPP_62.1_62.2",
+		"Paraparaumu-NZPP/NZPP_62.3_62.4",
+		"Paraparaumu-NZPP/NZPP_62.5"
+	],
+	"NZUN": [
+		"Pauanui-Beach-NZUN/NZUN_45.1",
+		"Pauanui-Beach-NZUN/NZUN_51.1_51.2",
+		"Pauanui-Beach-NZUN/NZUN_52.1"
+	],
+	"NZPN": [
+		"Picton-NZPN/NZPN_51.1_52.1",
+		"Picton-NZPN/NZPN_62.1"
+	],
+	"NZPK": [
+		"Pikes-Point-NZPK/NZPK_51.1_52.1"
+	],
+	"NZPO": [
+		"Porangahau-NZPO/NZPO"
+	],
+	"NZPH": [
+		"Pudding-Hill-NZPH/NZPH_51.1_52.1"
+	],
+	"NZUK": [
+		"Pukaki-NZUK/NZUK_51.1_51.2",
+		"Pukaki-NZUK/NZUK_52.1"
+	],
+	"NZPU": [
+		"Pukekohe-NZPU/NZPU_51.1_52.1"
+	],
+	"NZQW": [
+		"Queens-Wharf-NZQW/NZQW_35.1",
+		"Queens-Wharf-NZQW/NZQW_51.1_52.1"
+	],
+	"NZQN": [
+		"Queenstown-NZQN/NZQN_31.1_31.2",
+		"Queenstown-NZQN/NZQN_32.1",
+		"Queenstown-NZQN/NZQN_33.1_33.2",
+		"Queenstown-NZQN/NZQN_33.3_33.4",
+		"Queenstown-NZQN/NZQN_33.5_33.6",
+		"Queenstown-NZQN/NZQN_33.7_33.8",
+		"Queenstown-NZQN/NZQN_35.1_35.2",
+		"Queenstown-NZQN/NZQN_35.3_35.4",
+		"Queenstown-NZQN/NZQN_35.5_35.6",
+		"Queenstown-NZQN/NZQN_35.7_35.8",
+		"Queenstown-NZQN/NZQN_43.1_43.2",
+		"Queenstown-NZQN/NZQN_45.1_45.2",
+		"Queenstown-NZQN/NZQN_45.3_45.4",
+		"Queenstown-NZQN/NZQN_45.5",
+		"Queenstown-NZQN/NZQN_45.6_45.7",
+		"Queenstown-NZQN/NZQN_45.8_45.9",
+		"Queenstown-NZQN/NZQN_51.1_51.2",
+		"Queenstown-NZQN/NZQN_51.3",
+		"Queenstown-NZQN/NZQN_52.1_52.2",
+		"Queenstown-NZQN/NZQN_53.1_53.2",
+		"Queenstown-NZQN/NZQN_61.1",
+		"Queenstown-NZQN/NZQN_62.01_62.02",
+		"Queenstown-NZQN/NZQN_62.03_62.04",
+		"Queenstown-NZQN/NZQN_62.05_62.06",
+		"Queenstown-NZQN/NZQN_62.07_62.08",
+		"Queenstown-NZQN/NZQN_62.09_62.10",
+		"Queenstown-NZQN/NZQN_62.11_62.12",
+		"Queenstown-NZQN/NZQN_62.13_62.14",
+		"Queenstown-NZQN/NZQN_62.15_62.16",
+		"Queenstown-NZQN/NZQN_62.17_62.18",
+		"Queenstown-NZQN/NZQN_62.19_62.20",
+		"Queenstown-NZQN/NZQN_64.1_64.2",
+		"Queenstown-NZQN/NZQN_64.3"
+	],
+	"NZRA": [
+		"Raglan-NZRA/NZRA_51.1_52.1"
+	],
+	"NZRI": [
+		"Rakitata-Island-NZRI/NZRI_51.1_52.1"
+	],
+	"NZRN": [
+		"Ranfurly-Medical-Centre-NZRN/NZRN_33.1",
+		"Ranfurly-Medical-Centre-NZRN/NZRN_45.1",
+		"Ranfurly-Medical-Centre-NZRN/NZRN_51.1_52.1",
+		"Ranfurly-Medical-Centre-NZRN/NZRN_62.1"
+	],
+	"NZRT": [
+		"Rangiora-NZRT/NZRT_51.1_51.2",
+		"Rangiora-NZRT/NZRT_52.1"
+	],
+	"NZRK": [
+		"Rangitaiki-NZRK/NZRK"
+	],
+	"NZMX": [
+		"Raroa-NZMX/NZMX_45.1"
+	],
+	"NZJW": [
+		"Rawene-Hospital-NZJW/NZJW_45.1",
+		"Rawene-Hospital-NZJW/NZJW_51.1_52.1",
+		"Rawene-Hospital-NZJW/NZJW_62.1"
+	],
+	"NZRD": [
+		"Rosedale-NZRD/NZRD_51.1_52.1"
+	],
+	"NZRO": [
+		"Rotorua-NZRO/NZRO_31.1_32.1",
+		"Rotorua-NZRO/NZRO_33.1_33.2",
+		"Rotorua-NZRO/NZRO_33.3",
+		"Rotorua-NZRO/NZRO_33.4_33.5",
+		"Rotorua-NZRO/NZRO_33.6",
+		"Rotorua-NZRO/NZRO_43.1_43.2",
+		"Rotorua-NZRO/NZRO_43.3_43.4",
+		"Rotorua-NZRO/NZRO_45.1_45.2",
+		"Rotorua-NZRO/NZRO_45.3_45.4",
+		"Rotorua-NZRO/NZRO_45.5",
+		"Rotorua-NZRO/NZRO_51.1_51.2",
+		"Rotorua-NZRO/NZRO_52.1_52.2",
+		"Rotorua-NZRO/NZRO_61.1",
+		"Rotorua-NZRO/NZRO_62.1_62.2",
+		"Rotorua-NZRO/NZRO_62.3_62.4",
+		"Rotorua-NZRO/NZRO_62.5_62.6"
+	],
+	"NZJO": [
+		"Rotorua_Hospital-NZJO/NZJO_51.1_52.1"
+	],
+	"NZLF": [
+		"Rotorua_Lakefront-NZLF/NZLF_51.1_52.1"
+	],
+	"NZRL": [
+		"Rotorua_Lakes-NZRL/NZRL_52.1"
+	],
+	"NZRX": [
+		"Roxburgh-NZRX/NZRX_51.1_52.1"
+	],
+	"NZRR": [
+		"Ruatoria-NZRR/NZRR_45.1",
+		"Ruatoria-NZRR/NZRR_51.1_52.1",
+		"Ruatoria-NZRR/NZRR_62.1"
+	],
+	"NZRW": [
+		"Ruawai-NZRW/NZRW_51.1_52.1"
+	],
+	"NZRC": [
+		"Ryans-Creek-NZRC/NZRC_45.1",
+		"Ryans-Creek-NZRC/NZRC_51.1_52.1",
+		"Ryans-Creek-NZRC/NZRC_62.1"
+	],
+	"NZJS": [
+		"Southland-Kew-Hospital-NZJS/NZJS_33.1_45.1",
+		"Southland-Kew-Hospital-NZJS/NZJS_51.1_52.1",
+		"Southland-Kew-Hospital-NZJS/NZJS_62.1"
+	],
+	"NZSF": [
+		"Springfield-NZSF/NZSF_51.1_52.1"
+	],
+	"NZSL": [
+		"Springhill-NZSL/NZSL_51.1_52.1"
+	],
+	"NZSD": [
+		"Stratford-NZSD/NZSD_51.1_52.1"
+	],
+	"NZAH": [
+		"Taharoa-Ironsands-NZAH/NZAH_51.1_52.1"
+	],
+	"NZTI": [
+		"Taieri-NZTI/NZTI_33.1",
+		"Taieri-NZTI/NZTI_35.1",
+		"Taieri-NZTI/NZTI_45.1",
+		"Taieri-NZTI/NZTI_51.1_51.2",
+		"Taieri-NZTI/NZTI_52.1",
+		"Taieri-NZTI/NZTI_62.1_62.2",
+		"Taieri-NZTI/NZTI_64.1"
+	],
+	"NZVR": [
+		"Taihape-NZVR/NZVR_52.1"
+	],
+	"NZTK": [
+		"Takaka-NZTK/NZTK_45.1_45.2",
+		"Takaka-NZTK/NZTK_51.1_52.1",
+		"Takaka-NZTK/NZTK_62.1"
+	],
+	"NZTC": [
+		"Tapanui-Medical-Centre-NZTC/NZTC_45.1",
+		"Tapanui-Medical-Centre-NZTC/NZTC_51.1_52.1",
+		"Tapanui-Medical-Centre-NZTC/NZTC_62.1"
+	],
+	"NZJQ": [
+		"Taranaki-Base-Hospital-NZJQ/NZJQ_51.1_52.1"
+	],
+	"NZTS": [
+		"Tasman-NZTS/NZTS"
+	],
+	"NZTM": [
+		"Taumarunui-NZTM/NZTM"
+	],
+	"NZJT": [
+		"Taumarunui_Hospital-NZJT/NZJT_33.1",
+		"Taumarunui_Hospital-NZJT/NZJT_45.1",
+		"Taumarunui_Hospital-NZJT/NZJT_51.1_52.1",
+		"Taumarunui_Hospital-NZJT/NZJT_62.1"
+	],
+	"NZAP": [
+		"Taupo-NZAP/NZAP_31.1_31.2",
+		"Taupo-NZAP/NZAP_33.1_33.2",
+		"Taupo-NZAP/NZAP_35.1_35.2",
+		"Taupo-NZAP/NZAP_44.1_44.2",
+		"Taupo-NZAP/NZAP_44.3_44.4",
+		"Taupo-NZAP/NZAP_45.1_45.2",
+		"Taupo-NZAP/NZAP_51.1_51.2",
+		"Taupo-NZAP/NZAP_52.1_52.2",
+		"Taupo-NZAP/NZAP_53.1_53.2",
+		"Taupo-NZAP/NZAP_61.1_62.1",
+		"Taupo-NZAP/NZAP_62.2_62.3",
+		"Taupo-NZAP/NZAP_62.4_62.5",
+		"Taupo-NZAP/NZAP_62.6_62.7"
+	],
+	"NZJZ": [
+		"Taupo_Hospital-NZJZ/NZJZ"
+	],
+	"NZLT": [
+		"Taupo_Water-NZLT/NZLT"
+	],
+	"NZTG": [
+		"Tauranga-NZTG/NZTG_31.1",
+		"Tauranga-NZTG/NZTG_33.1_33.2",
+		"Tauranga-NZTG/NZTG_35.1_35.2",
+		"Tauranga-NZTG/NZTG_44.1_44.2",
+		"Tauranga-NZTG/NZTG_44.3",
+		"Tauranga-NZTG/NZTG_45.1_45.2",
+		"Tauranga-NZTG/NZTG_51.1_51.2",
+		"Tauranga-NZTG/NZTG_52.1_52.2",
+		"Tauranga-NZTG/NZTG_53.1",
+		"Tauranga-NZTG/NZTG_61.1",
+		"Tauranga-NZTG/NZTG_62.1_62.2",
+		"Tauranga-NZTG/NZTG_62.3_62.4",
+		"Tauranga-NZTG/NZTG_64.1_64.2"
+	],
+	"NZJA": [
+		"Tauranga_Hospital-NZJA/NZJA"
+	],
+	"NZTJ": [
+		"Tawhaki-NZTJ/NZTJ_51.1_52.1"
+	],
+	"NZMO": [
+		"Te-Anau-Manapouri-NZMO/NZMO_31.1_33.1",
+		"Te-Anau-Manapouri-NZMO/NZMO_45.1",
+		"Te-Anau-Manapouri-NZMO/NZMO_51.1_52.1",
+		"Te-Anau-Manapouri-NZMO/NZMO_52.2",
+		"Te-Anau-Manapouri-NZMO/NZMO_62.1"
+	],
+	"NZTX": [
+		"Te-Anau-Medical-Centre-NZTX/NZTX_33.1",
+		"Te-Anau-Medical-Centre-NZTX/NZTX_45.1",
+		"Te-Anau-Medical-Centre-NZTX/NZTX_51.1_52.1",
+		"Te-Anau-Medical-Centre-NZTX/NZTX_62.1"
+	],
+	"NZTR": [
+		"Te-Araroa-NZTR/NZTR_51.1_52.1"
+	],
+	"NZFA": [
+		"Te-Hapua-NZFA/NZFA_45.1",
+		"Te-Hapua-NZFA/NZFA_51.1_52.1",
+		"Te-Hapua-NZFA/NZFA_62.1"
+	],
+	"NZTE": [
+		"Te-Kowhai-NZTE/NZTE"
+	],
+	"NZTT": [
+		"Te-Kuiti-NZTT/NZTT_51.1_52.1"
+	],
+	"NZTQ": [
+		"Te-Kuiti_Hospital-NZTQ/NZTQ_33.1_45.1",
+		"Te-Kuiti_Hospital-NZTQ/NZTQ_51.1_52.1",
+		"Te-Kuiti_Hospital-NZTQ/NZTQ_62.1"
+	],
+	"NZJP": [
+		"Te-Puia-Springs-Hospital-NZJP/NZJP_51.1_52.1"
+	],
+	"NZTL": [
+		"Tekapo-NZTL/NZTL_51.1_52.1"
+	],
+	"NZTP": [
+		"Tekapo_Mackenzie-NZTP/NZTP"
+	],
+	"NZTH": [
+		"Thames-NZTH/NZTH_31.1_45.1",
+		"Thames-NZTH/NZTH_51.1_52.1",
+		"Thames-NZTH/NZTH_62.1"
+	],
+	"NZJD": [
+		"Thames_Hospital-NZJD/NZJD_45.1",
+		"Thames_Hospital-NZJD/NZJD_51.1_52.1"
+	],
+	"NZTU": [
+		"Timaru-NZTU/NZTU_33.1_33.2",
+		"Timaru-NZTU/NZTU_44.1",
+		"Timaru-NZTU/NZTU_44.2_44.3",
+		"Timaru-NZTU/NZTU_45.1_45.2",
+		"Timaru-NZTU/NZTU_51.1_52.1",
+		"Timaru-NZTU/NZTU_52.2",
+		"Timaru-NZTU/NZTU_61.1_62.1",
+		"Timaru-NZTU/NZTU_62.2"
+	],
+	"NZTZ": [
+		"Timaru_Hospital-NZTZ/NZTZ_45.1",
+		"Timaru_Hospital-NZTZ/NZTZ_51.1_52.1",
+		"Timaru_Hospital-NZTZ/NZTZ_62.1"
+	],
+	"NZTO": [
+		"Tokoroa-NZTO/NZTO_45.1_45.2",
+		"Tokoroa-NZTO/NZTO_51.1_52.1"
+	],
+	"NZJX": [
+		"Tokoroa_Hospital-NZJX/NZJX_51.1_52.1",
+		"Tokoroa_Hospital-NZJX/NZJX_62.1"
+	],
+	"NZTN": [
+		"Turangi-NZTN/NZTN_51.1_52.1"
+	],
+	"NZTW": [
+		"Twizel_Medical-Centre-NZTW/NZTW_33.1_33.2",
+		"Twizel_Medical-Centre-NZTW/NZTW_45.1_45.2",
+		"Twizel_Medical-Centre-NZTW/NZTW_51.1_52.1",
+		"Twizel_Medical-Centre-NZTW/NZTW_62.1_62.2"
+	],
+	"NZKE": [
+		"Waiheke-NZKE/NZKE_35.1_35.2",
+		"Waiheke-NZKE/NZKE_51.1_52.1"
+	],
+	"NZWV": [
+		"Waihi-Beach-NZWV/NZWV"
+	],
+	"NZHH": [
+		"Waikato-Hospital-NZHH/NZHH_33.1",
+		"Waikato-Hospital-NZHH/NZHH_45.1",
+		"Waikato-Hospital-NZHH/NZHH_51.1_51.2",
+		"Waikato-Hospital-NZHH/NZHH_52.1",
+		"Waikato-Hospital-NZHH/NZHH_62.1"
+	],
+	"NZWM": [
+		"Waimate-NZWM/NZWM_51.1_52.1"
+	],
+	"NZYP": [
+		"Waipukurau-NZYP/NZYP_51.1_52.1"
+	],
+	"NZMH": [
+		"Wairarapa-Hospital-NZMH/NZMH_51.1_52.1"
+	],
+	"NZJB": [
+		"Wairau-Hospital-NZJB/NZJB"
+	],
+	"NZWO": [
+		"Wairoa-NZWO/NZWO_33.1",
+		"Wairoa-NZWO/NZWO_45.1_45.2",
+		"Wairoa-NZWO/NZWO_51.1_52.1",
+		"Wairoa-NZWO/NZWO_61.1",
+		"Wairoa-NZWO/NZWO_62.1_62.2"
+	],
+	"NZJY": [
+		"Wairoa_Hospital-NZJY/NZJY_51.1_52.1"
+	],
+	"NZWQ": [
+		"Waitiki-NZWQ/NZWQ"
+	],
+	"NZWF": [
+		"Wanaka-NZWF/NZWF_31.1_33.1",
+		"Wanaka-NZWF/NZWF_35.1_35.2",
+		"Wanaka-NZWF/NZWF_35.3_35.4",
+		"Wanaka-NZWF/NZWF_45.1",
+		"Wanaka-NZWF/NZWF_51.1_51.2",
+		"Wanaka-NZWF/NZWF_52.1",
+		"Wanaka-NZWF/NZWF_53.1",
+		"Wanaka-NZWF/NZWF_61.1_62.1",
+		"Wanaka-NZWF/NZWF_62.2_62.3"
+	],
+	"NZHC": [
+		"Wanaka_Lakes-Health-Centre-NZHC/NZHC_33.1_33.2",
+		"Wanaka_Lakes-Health-Centre-NZHC/NZHC_45.1",
+		"Wanaka_Lakes-Health-Centre-NZHC/NZHC_51.1_52.1",
+		"Wanaka_Lakes-Health-Centre-NZHC/NZHC_62.1_62.2"
+	],
+	"NZWZ": [
+		"Warkworth-NZWZ/NZWZ_45.1",
+		"Warkworth-NZWZ/NZWZ_51.1_52.1",
+		"Warkworth-NZWZ/NZWZ_62.1"
+	],
+	"NZWN": [
+		"Wellington-NZWN/NZWN_31.1_31.2",
+		"Wellington-NZWN/NZWN_31.3_31.4",
+		"Wellington-NZWN/NZWN_31.5_31.6",
+		"Wellington-NZWN/NZWN_33.01_33.02",
+		"Wellington-NZWN/NZWN_33.03_33.04",
+		"Wellington-NZWN/NZWN_33.05_33.06",
+		"Wellington-NZWN/NZWN_33.07_33.08",
+		"Wellington-NZWN/NZWN_33.09_33.10",
+		"Wellington-NZWN/NZWN_33.11",
+		"Wellington-NZWN/NZWN_35.1_35.2",
+		"Wellington-NZWN/NZWN_41.1_41.2",
+		"Wellington-NZWN/NZWN_41.3",
+		"Wellington-NZWN/NZWN_41.4G",
+		"Wellington-NZWN/NZWN_43.1_43.2",
+		"Wellington-NZWN/NZWN_45.01_45.02",
+		"Wellington-NZWN/NZWN_45.03_45.04",
+		"Wellington-NZWN/NZWN_45.05",
+		"Wellington-NZWN/NZWN_51.1_51.2",
+		"Wellington-NZWN/NZWN_52.1_52.2",
+		"Wellington-NZWN/NZWN_53.1_53.2",
+		"Wellington-NZWN/NZWN_53.3_53.4",
+		"Wellington-NZWN/NZWN_53.5_53.6",
+		"Wellington-NZWN/NZWN_53.7",
+		"Wellington-NZWN/NZWN_54.1_54.2",
+		"Wellington-NZWN/NZWN_54.3_54.4",
+		"Wellington-NZWN/NZWN_61.1_61.2",
+		"Wellington-NZWN/NZWN_62.01_62.02",
+		"Wellington-NZWN/NZWN_62.03_62.04",
+		"Wellington-NZWN/NZWN_62.05_62.06",
+		"Wellington-NZWN/NZWN_62.07_62.08",
+		"Wellington-NZWN/NZWN_62.09_62.10",
+		"Wellington-NZWN/NZWN_62.11_62.12",
+		"Wellington-NZWN/NZWN_62.13_62.14",
+		"Wellington-NZWN/NZWN_62.15_62.16",
+		"Wellington-NZWN/NZWN_62.17_62.18",
+		"Wellington-NZWN/NZWN_64.1_64.2"
+	],
+	"NZWH": [
+		"Wellington_Hospital-NZWH/NZWH_51.1_52.1"
+	],
+	"NZWJ": [
+		"Wellsford-NZWJ/NZWJ_45.1_45.2",
+		"Wellsford-NZWJ/NZWJ_62.1"
+	],
+	"NZWL": [
+		"West-Melton-NZWL/NZWL_51.1_51.2",
+		"West-Melton-NZWL/NZWL_52.1"
+	],
+	"NZWS": [
+		"Westport-NZWS/NZWS_33.1",
+		"Westport-NZWS/NZWS_33.2_33.3",
+		"Westport-NZWS/NZWS_44.1",
+		"Westport-NZWS/NZWS_45.1_45.2",
+		"Westport-NZWS/NZWS_51.1_52.1",
+		"Westport-NZWS/NZWS_52.2",
+		"Westport-NZWS/NZWS_61.1",
+		"Westport-NZWS/NZWS_62.1_62.2"
+	],
+	"NZWK": [
+		"Whakatane-NZWK/NZWK_31.1_33.1",
+		"Whakatane-NZWK/NZWK_44.1_44.2",
+		"Whakatane-NZWK/NZWK_45.1_45.2",
+		"Whakatane-NZWK/NZWK_51.1_51.2",
+		"Whakatane-NZWK/NZWK_52.1_52.2",
+		"Whakatane-NZWK/NZWK_61.1_62.1"
+	],
+	"NZJF": [
+		"Whakatane_Hospital-NZJF/NZJF"
+	],
+	"NZWG": [
+		"Whangamata-NZWG/NZWG_33.1",
+		"Whangamata-NZWG/NZWG_45.1",
+		"Whangamata-NZWG/NZWG_62.1"
+	],
+	"NZWU": [
+		"Whanganui-NZWU/NZWU_31.1",
+		"Whanganui-NZWU/NZWU_33.1_33.2",
+		"Whanganui-NZWU/NZWU_35.1",
+		"Whanganui-NZWU/NZWU_44.1_44.2",
+		"Whanganui-NZWU/NZWU_45.1_45.2",
+		"Whanganui-NZWU/NZWU_51.1_51.2",
+		"Whanganui-NZWU/NZWU_52.1_52.2",
+		"Whanganui-NZWU/NZWU_53.1",
+		"Whanganui-NZWU/NZWU_61.1_62.1",
+		"Whanganui-NZWU/NZWU_62.2",
+		"Whanganui-NZWU/NZWU_64.1"
+	],
+	"NZJU": [
+		"Whanganui_Hospital-NZJU/NZJU"
+	],
+	"NZWR": [
+		"Whangarei-NZWR/NZWR_44.1_44.2",
+		"Whangarei-NZWR/NZWR_45.1_45.2",
+		"Whangarei-NZWR/NZWR_45.3_46.1",
+		"Whangarei-NZWR/NZWR_51.1_51.2",
+		"Whangarei-NZWR/NZWR_52.1_52.2",
+		"Whangarei-NZWR/NZWR_61.1",
+		"Whangarei-NZWR/NZWR_62.1_62.2",
+		"Whangarei-NZWR/NZWR_62.3_62.4"
+	],
+	"NZJR": [
+		"Whangarei_Hospital-NZJR/NZJR"
+	],
+	"NZES": [
+		"Wharepapa-South-NZES/NZES"
+	],
+	"NZWP": [
+		"Whenuapai-NZWP/NZWP_31.1_32.1",
+		"Whenuapai-NZWP/NZWP_33.1_33.2",
+		"Whenuapai-NZWP/NZWP_33.3_33.4",
+		"Whenuapai-NZWP/NZWP_33.5_41.1",
+		"Whenuapai-NZWP/NZWP_41.2_41.3",
+		"Whenuapai-NZWP/NZWP_43.1_43.2",
+		"Whenuapai-NZWP/NZWP_43.3_43.4",
+		"Whenuapai-NZWP/NZWP_45.1_45.2",
+		"Whenuapai-NZWP/NZWP_45.3_45.4",
+		"Whenuapai-NZWP/NZWP_51.1_51.2",
+		"Whenuapai-NZWP/NZWP_51.3",
+		"Whenuapai-NZWP/NZWP_52.1_52.2",
+		"Whenuapai-NZWP/NZWP_53.1_53.2",
+		"Whenuapai-NZWP/NZWP_53.3",
+		"Whenuapai-NZWP/NZWP_61.1_62.1",
+		"Whenuapai-NZWP/NZWP_62.2_62.3",
+		"Whenuapai-NZWP/NZWP_62.4_62.5",
+		"Whenuapai-NZWP/NZWP_62.6_62.7",
+		"Whenuapai-NZWP/NZWP_62.8"
+	],
+	"NZWT": [
+		"Whitianga-NZWT/NZWT_33.1",
+		"Whitianga-NZWT/NZWT_45.1_45.2",
+		"Whitianga-NZWT/NZWT_45.3",
+		"Whitianga-NZWT/NZWT_51.1_51.2",
+		"Whitianga-NZWT/NZWT_52.1",
+		"Whitianga-NZWT/NZWT_62.1_62.2"
+	],
+	"NZWB": [
+		"Woodbourne-NZWB/NZWB_31.1_31.2",
+		"Woodbourne-NZWB/NZWB_31.3",
+		"Woodbourne-NZWB/NZWB_33.1_33.2",
+		"Woodbourne-NZWB/NZWB_33.3",
+		"Woodbourne-NZWB/NZWB_34.1_34.2",
+		"Woodbourne-NZWB/NZWB_43.1_43.2",
+		"Woodbourne-NZWB/NZWB_43.3_43.4",
+		"Woodbourne-NZWB/NZWB_45.1_45.2",
+		"Woodbourne-NZWB/NZWB_51.1_51.2",
+		"Woodbourne-NZWB/NZWB_52.1_52.2",
+		"Woodbourne-NZWB/NZWB_53.1",
+		"Woodbourne-NZWB/NZWB_61.1",
+		"Woodbourne-NZWB/NZWB_62.1_62.2",
+		"Woodbourne-NZWB/NZWB_62.3_62.4",
+		"Woodbourne-NZWB/NZWB_62.5",
+		"Woodbourne-NZWB/NZWB_62.6_62.7",
+		"Woodbourne-NZWB/NZWB_62.8",
+		"Woodbourne-NZWB/NZWB_63.1_63.2"
+	]
+}
