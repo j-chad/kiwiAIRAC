@@ -7,7 +7,7 @@ import random
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Optional
+from typing import Iterable, Optional, Sequence
 from urllib.parse import urlparse
 
 import httpx
@@ -69,7 +69,7 @@ class _RateLimiter:
 @dataclass(frozen=True)
 class DownloadJob:
 	url: str
-	content_types: Optional[Iterable[str]] = None
+	content_types: Optional[Sequence[str]] = None
 
 	@property
 	def filename(self) -> str:
@@ -90,9 +90,9 @@ class _DownloadManager:
 		timeout: float = 30.0,
 		max_retries: int = 3,
 	):
-		self.download_dir = download_dir
-		if not self.download_dir.exists():
-			self.download_dir.mkdir(parents=False)
+		self._download_dir = download_dir
+		if not self._download_dir.exists():
+			self._download_dir.mkdir(parents=False)
 
 		self._rate_limiter = _RateLimiter(rps=rps)
 		self._max_retries = max_retries
@@ -105,7 +105,7 @@ class _DownloadManager:
 			keepalive_expiry=30,
 		)
 
-		self.client = httpx.AsyncClient(
+		self._client = httpx.AsyncClient(
 			timeout=httpx.Timeout(timeout),
 			follow_redirects=True,
 			headers={"User-Agent": user_agent},
@@ -124,7 +124,7 @@ class _DownloadManager:
 		Returns a local cached file path. If cached copy is fresh, returns immediately.
 		Otherwise, downloads (with retries) into the cache dir and returns the path.
 		"""
-		cache_path = self.download_dir / job.filename
+		cache_path = self._download_dir / job.filename
 		if self._is_fresh(cache_path):
 			return cache_path
 
@@ -168,11 +168,11 @@ class _DownloadManager:
 
 		async with self._semaphore:
 			await self._rate_limiter.acquire()
-			await self._download_with_retries(url, cache_path)
+			await self._download_with_retries(job, url, cache_path)
 
 		return cache_path
 
-	async def _download_with_retries(self, url: str, dest: Path) -> None:
+	async def _download_with_retries(self, job: DownloadJob, url: str, dest: Path) -> None:
 		last_exc: Optional[Exception] = None
 
 		for attempt in range(self._max_retries + 1):
@@ -183,8 +183,15 @@ class _DownloadManager:
 				except FileNotFoundError:
 					pass
 
-				async with self.client.stream("GET", url) as resp:
+				async with self._client.stream("GET", url) as resp:
 					resp.raise_for_status()
+
+					if job.content_types:
+						ct = resp.headers.get("Content-Type", "")
+						if not ct or not _content_type_matches(ct, job.content_types):
+							raise ValueError(
+								f"Unexpected Content-Type {ct!r} for {url}; expected one of {list(job.content_types)}"
+							)
 
 					with open(tmp, "wb") as f:
 						async for chunk in resp.aiter_bytes(chunk_size=64 * 1024):
@@ -205,7 +212,14 @@ class _DownloadManager:
 		assert last_exc is not None
 		raise last_exc
 
-download_manager = _DownloadManager(
+def _content_type_matches(actual: str, expected: Iterable[str]) -> bool:
+	actual_main = actual.split(";", 1)[0].strip().lower()
+	for exp in expected:
+		if actual_main == exp.lower():
+			return True
+	return False
+
+downloader = _DownloadManager(
 	download_dir=Path(DOWNLOAD_CACHE_DIR),
 	user_agent=USER_AGENT,
 	proxy=_AIPProxy(PROXY_BASE),
