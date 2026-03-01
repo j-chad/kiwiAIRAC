@@ -9,13 +9,12 @@ import camelot
 import pandas as pd
 from pypdf import PdfReader
 
-from aip_page import AIPPage
-from download import client
+from download import downloader, DownloadJob
 from errors import ParseError
 from models import Volume, Subscription
 
 # Where to download the checklist PDF from.
-CHECKLIST_URL = 'https://www.aip.net.nz/assets/AIP/General-GEN/0-GEN/GEN_0.4.pdf'
+CHECKLIST_JOB = DownloadJob(url='https://www.aip.net.nz/assets/AIP/General-GEN/0-GEN/GEN_0.4.pdf', content_types=['application/pdf'])
 
 # Each page in the combined table section of the checklist PDF has a header like "GEN 0.4 - 1", "GEN 0.4 - 2", etc.
 HEADER_NUM_RE = re.compile(r"GEN 0.4 - (\d+)")
@@ -46,19 +45,10 @@ DATE_REGEX = re.compile(r"\d{1,2} [A-Za-z]{3} \d{2}")
 
 class Checklist:
 	@staticmethod
-	def download() -> 'Checklist':
+	async def fetch() -> 'Checklist':
 		"""Downloads the checklist PDF from the specified URL and returns a Checklist instance."""
-		response = client.get(CHECKLIST_URL)
-		response.raise_for_status()
-
-		if response.headers.get('Content-Type') != 'application/pdf':
-			raise ParseError(f"Expected a PDF file, but got Content-Type: {response.headers.get('Content-Type')}")
-
-		with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as f:
-			f.write(response.content)
-			pdf_path = pathlib.Path(f.name)
-			return Checklist(pdf_path)
-
+		checklist_path = await downloader.download(CHECKLIST_JOB)
+		return Checklist(checklist_path)
 
 	def __init__(self, pdf_path: pathlib.Path):
 		"""Initialises the Checklist by parsing the specified PDF file."""
@@ -229,9 +219,12 @@ class Checklist:
 
 		return result
 
+async def _main():
+	checklist_inst = await Checklist.fetch()
+	checklist_inst.volumes(Subscription.VISUAL).effective_after(datetime.date(2024, 6, 1))
+	print(checklist_inst.df)
 
 if __name__ == '__main__':
-	path = pathlib.Path('test/GEN_0.4.pdf')
-	checklist = Checklist.download()
-	print(checklist.df)
+	import asyncio
+	raise SystemExit(asyncio.run(_main()))
 

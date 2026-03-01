@@ -5,6 +5,7 @@ import hashlib
 import os
 import random
 import time
+import urllib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Optional, Sequence
@@ -39,12 +40,11 @@ class _AIPProxy(Proxy):
 		self.base_url = base_url
 
 	def should_proxy(self, url: str) -> bool:
-		# Only proxy requests to the AIP server
 		return url.startswith("https://www.aip.net.nz/")
 
 	def get_proxy_url(self, url: str) -> str:
-		# Encode the original URL as a query parameter
-		return f"{self.base_url}{url}"
+		encoded_url = urllib.parse.quote_plus(url)
+		return f"{self.base_url}{encoded_url}"
 
 class _RateLimiter:
 	"""
