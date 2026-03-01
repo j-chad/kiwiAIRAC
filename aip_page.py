@@ -145,11 +145,10 @@ class AIPPage:
 		More complex sections like aerodrome charts may not have a predictable URL
 		so this method will return None for those.
 
-		:raise DocumentAccessError: if the page is not available online
 		:return: the URL for the page, or None if it cannot be determined lexically
 		"""
 		if not self.available:
-			raise DocumentAccessError(f"Page {self.page} is not available online")
+			return None
 
 		if self.section == Section.AERODROMES and self.aerodrome is not None:
 			return AERODROME_URL.format(aerodrome=self.aerodrome)

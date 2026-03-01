@@ -232,8 +232,9 @@ class Checklist:
 async def _main():
 	checklist_inst = await Checklist.fetch()
 	checklist_inst.volumes(Subscription.VISUAL).effective_after(datetime.date(2024, 6, 1))
-	for page in checklist_inst:
-		print(repr(page))
+	download_jobs = (DownloadJob(url=page.simple_url, content_types=['application/pdf']) for page in checklist_inst if page.simple_url)
+	with RichProgressReporter() as progress:
+		await downloader.download_many(download_jobs, progress=progress)
 
 	print(f"Found {len(checklist_inst)} pages in the checklist")
 

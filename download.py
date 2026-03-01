@@ -144,8 +144,8 @@ class _DownloadManager:
 		user_agent: str,
 		proxy: Proxy | None = None,
 		cache_expiry_days: int = CACHE_EXPIRY_DAYS,
-		concurrency: int = 8,
-		rps: float = 4.0,
+		concurrency: int = 2,
+		rps: float = 1.0,
 		timeout: float = 30.0,
 		max_retries: int = 3,
 		max_jitter_seconds: float = 2,
@@ -206,7 +206,8 @@ class _DownloadManager:
 			# Clean up inflight map when done (only by the last waiter)
 			if existing.done():
 				async with self._inflight_lock:
-					await self._inflight.pop(cache_path, None)
+					# noinspection PyAsyncCall
+					self._inflight.pop(cache_path, None)
 
 	async def download_many(self, jobs: Iterable[DownloadJob], progress: Optional[ProgressReporter] = None) -> tuple[Path]:
 		tasks = [asyncio.create_task(self.download(job, progress=progress)) for job in jobs]
@@ -284,10 +285,11 @@ class _DownloadManager:
 				return
 
 			except (httpx.TimeoutException, httpx.TransportError, httpx.HTTPStatusError) as e:
+				print(f"Error downloading {url} (attempt {attempt + 1}/{self._max_retries + 1}): {e}")
 				last_exc = e
 				if attempt >= self._max_retries:
 					break
-				backoff = (2 ** attempt) * 0.5 + random.random() * 0.25
+				backoff = (2 ** attempt) * 0.5 + random.random() * self.max_jitter_seconds
 				await asyncio.sleep(backoff)
 
 		assert last_exc is not None
