@@ -58,6 +58,7 @@ class Checklist:
 		self._width = self._get_pdf_width()
 		pages = self._get_combined_pages()
 		self._df = self._extract_tables(pages)
+		self._collapse_blank_pages()
 
 	def __len__(self) -> int:
 		"""Returns the number of rows in the checklist."""
@@ -231,7 +232,9 @@ class Checklist:
 
 async def _main():
 	checklist_inst = await Checklist.fetch()
-	checklist_inst.volumes(Subscription.VISUAL).effective_after(datetime.date(2024, 6, 1))
+	# checklist_inst.volumes(Subscription.VISUAL).effective_after(datetime.date(2024, 6, 1))
+
+	categorise_pages(checklist_inst)
 
 	jobs = [DownloadJob(url=page.url, content_types=['application/pdf']) for page in checklist_inst if page.url is not None]
 

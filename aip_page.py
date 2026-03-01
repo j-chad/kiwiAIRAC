@@ -188,22 +188,21 @@ class AIPPage:
 
 		return None
 
-def categorise_pages(pages: Iterable[AIPPage]) -> tuple[dict[PageColour, dict[str, list[AIPPage]]], list[AIPPage]]:
+def categorise_pages(pages: Iterable[AIPPage]) -> dict[PageColour, dict[str, list[AIPPage]]]:
 	"""Collects the AIP pages by colour and URL.
 
 	Pages that do not have a predictable URL are returned in the second element of the tuple.
 	"""
 	collected: dict[PageColour | None, dict[str, list[AIPPage]]] = {}
-	uncollected: list[AIPPage] = []
 
 	for page in pages:
 		url = page.url
 		if url is None:
-			uncollected.append(page)
-		else:
-			collected.setdefault(page.colour, {}).setdefault(url, []).append(page)
+			raise DocumentAccessError(f"Could not determine URL for page: {page}")
 
-	return collected, uncollected
+		collected.setdefault(page.colour, {}).setdefault(url, []).append(page)
+
+	return collected
 
 
 
