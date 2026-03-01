@@ -6,10 +6,12 @@ import os
 import random
 import time
 import urllib
+import uuid
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Optional, Sequence
+from typing import Iterable, Optional, Sequence, Protocol
 from urllib.parse import urlparse
+from uuid import UUID
 
 import httpx
 from platformdirs import PlatformDirs
@@ -20,16 +22,26 @@ PROXY_BASE = base64.b64decode("aHR0cHM6Ly9nb3ByZWZsaWdodC5jby5uei9kYXRhL2NoYXJ0L
 DOWNLOAD_CACHE_DIR = PlatformDirs("kiwiAIRAC", False).user_cache_path
 CACHE_EXPIRY_DAYS = 7
 
-class Proxy(abc.ABC):
-	@abc.abstractmethod
+class ProgressReporter(Protocol):
+	def start(self, label: str, total: Optional[int]) -> int: ... #
+	def advance(self, task_id: int, n: int) -> None: ...
+	def finish(self, task_id: int) -> None: ...
+	def skip(self, label: str) -> None: ...
+
+class _NullProgressReporter(ProgressReporter):
+	def start(self, label: str, total: Optional[int]) -> int: return -1
+	def advance(self, task_id: int, n: int) -> None: pass
+	def finish(self, task_id: int) -> None: pass
+	def skip(self, label: str) -> None: pass
+
+class Proxy(Protocol):
 	def should_proxy(self, url: str) -> bool:
 		"""Returns True if the given URL should be proxied, False otherwise."""
-		pass
+		...
 
-	@abc.abstractmethod
 	def get_proxy_url(self, url: str) -> str:
 		"""Returns the URL to proxy the given URL through."""
-		pass
+		...
 
 class _AIPProxy(Proxy):
 	"""
@@ -73,6 +85,13 @@ class DownloadJob:
 
 	@property
 	def filename(self) -> str:
+		""" Returns a human-readable filename for this URL """
+		parsed = urlparse(self.url)
+		return Path(parsed.path).name
+
+	@property
+	def cache_filename(self) -> str:
+		""" Returns a deterministic cache filename for this URL, based on a hash of the URL and the original file extension (if any) """
 		parsed = urlparse(self.url)
 		ext = Path(parsed.path).suffix  # includes leading "."
 		digest = hashlib.sha256(self.url.encode("utf-8")).hexdigest()[:24]
@@ -89,6 +108,7 @@ class _DownloadManager:
 		rps: float = 4.0,
 		timeout: float = 30.0,
 		max_retries: int = 3,
+		max_jitter_seconds: float = 2,
 	):
 		self._download_dir = download_dir
 		if not self._download_dir.exists():
@@ -98,6 +118,7 @@ class _DownloadManager:
 		self._max_retries = max_retries
 		self._proxy = proxy
 		self._cache_expiry_seconds = cache_expiry_days * 24 * 3600
+		self.max_jitter_seconds = max_jitter_seconds
 
 		limits = httpx.Limits(
 			max_connections=concurrency * 2,
@@ -119,20 +140,23 @@ class _DownloadManager:
 		self._inflight_lock = asyncio.Lock()
 		self._inflight: dict[Path, asyncio.Task[Path]] = {}
 
-	async def download(self, job: DownloadJob) -> Path:
+	async def download(self, job: DownloadJob, *, progress: Optional[ProgressReporter] = None) -> Path:
 		"""
 		Returns a local cached file path. If cached copy is fresh, returns immediately.
 		Otherwise, downloads (with retries) into the cache dir and returns the path.
 		"""
-		cache_path = self._download_dir / job.filename
+		progress_reporter = progress or _NullProgressReporter()
+
+		cache_path = self._download_dir / job.cache_filename
 		if self._is_fresh(cache_path):
+			progress_reporter.skip(job.cache_filename)
 			return cache_path
 
 		# De-dupe concurrent downloads to the same file
 		async with self._inflight_lock:
 			existing = self._inflight.get(cache_path)
 			if existing is None:
-				task = asyncio.create_task(self._download_to_cache(job, cache_path))
+				task = asyncio.create_task(self._download_to_cache(job, cache_path, progress=progress_reporter))
 				self._inflight[cache_path] = task
 				existing = task
 
@@ -144,8 +168,8 @@ class _DownloadManager:
 				async with self._inflight_lock:
 					await self._inflight.pop(cache_path, None)
 
-	async def download_many(self, jobs: Iterable[DownloadJob]) -> tuple[Path]:
-		tasks = [asyncio.create_task(self.download(job)) for job in jobs]
+	async def download_many(self, jobs: Iterable[DownloadJob], progress: Optional[ProgressReporter] = None) -> tuple[Path]:
+		tasks = [asyncio.create_task(self.download(job, progress=progress)) for job in jobs]
 		return await asyncio.gather(*tasks)
 
 	def _is_fresh(self, path: Path) -> bool:
@@ -159,21 +183,27 @@ class _DownloadManager:
 			return self._proxy.get_proxy_url(url)
 		return url
 
-	async def _download_to_cache(self, job: DownloadJob, cache_path: Path) -> Path:
+	async def _download_to_cache(self, job: DownloadJob, cache_path: Path, *, progress: ProgressReporter) -> Path:
 		# Another check in case someone else refreshed it while we waited for inflight lock
 		if self._is_fresh(cache_path):
+			progress.skip(job.cache_filename)
 			return cache_path
 
 		url = self._rewrite_url_if_needed(job.url)
 
 		async with self._semaphore:
 			await self._rate_limiter.acquire()
-			await self._download_with_retries(job, url, cache_path)
+			await self._download_with_retries(job, url, cache_path, progress=progress)
 
 		return cache_path
 
-	async def _download_with_retries(self, job: DownloadJob, url: str, dest: Path) -> None:
+	async def _download_with_retries(self, job: DownloadJob, url: str, dest: Path, *, progress: ProgressReporter) -> None:
 		last_exc: Optional[Exception] = None
+
+		# Jitter to prevent overwhelming the server
+		jitter = random.random() * self.max_jitter_seconds
+		if jitter > 0:
+			await asyncio.sleep(jitter)
 
 		for attempt in range(self._max_retries + 1):
 			try:
@@ -193,13 +223,23 @@ class _DownloadManager:
 								f"Unexpected Content-Type {ct!r} for {url}; expected one of {list(job.content_types)}"
 							)
 
+					total = None
+					if resp.headers.get("Content-Length"):
+						try:
+							total = int(resp.headers["Content-Length"])
+						except ValueError:
+							total = None
+					task_id = progress.start(job.filename, total)
+
 					with open(tmp, "wb") as f:
 						async for chunk in resp.aiter_bytes(chunk_size=64 * 1024):
 							if not chunk:
 								continue
 							f.write(chunk)
+							progress.advance(task_id, len(chunk))
 
 				os.replace(tmp, dest)
+				progress.finish(task_id)
 				return
 
 			except (httpx.TimeoutException, httpx.TransportError, httpx.HTTPStatusError) as e:
