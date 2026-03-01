@@ -9,6 +9,7 @@ import camelot
 import pandas as pd
 from pypdf import PdfReader
 
+from aip_page import AIPPage
 from download import downloader, DownloadJob, RichProgressReporter
 from errors import ParseError
 from models import Volume, Subscription
@@ -56,19 +57,27 @@ class Checklist:
 		self._path = pdf_path
 		self._width = self._get_pdf_width()
 		pages = self._get_combined_pages()
-		self.df = self._extract_tables(pages)
+		self._df = self._extract_tables(pages)
+
+	def __len__(self) -> int:
+		"""Returns the number of rows in the checklist."""
+		return len(self._df)
+
+	def __iter__(self) -> Iterator[AIPPage]:
+		"""Iterates over the rows in the checklist, yielding an AIPPage for each row."""
+		return (AIPPage(page_number) for page_number in self._df["Page No"])
 
 	def volumes(self, volumes: Subscription | set[Volume]) -> 'Checklist':
 		"""Filter the checklist to only include rows that are relevant to the specified volumes."""
 		if isinstance(volumes, Subscription):
 			volumes = volumes.value
 
-		self.df = self.df[self.df["Volume"].apply(lambda v: not v.isdisjoint(volumes))].reset_index(drop=True)
+		self._df = self._df[self._df["Volume"].apply(lambda v: not v.isdisjoint(volumes))].reset_index(drop=True)
 		return self
 
 	def effective_after(self, date: datetime.date) -> 'Checklist':
 		"""Filter the checklist to only include rows with an effective date after the specified date."""
-		self.df = self.df[self.df["Effective"] > pd.to_datetime(date)].reset_index(drop=True)
+		self._df = self._df[self._df["Effective"] > pd.to_datetime(date)].reset_index(drop=True)
 		return self
 
 	def _get_pdf_width(self) -> int:
@@ -223,7 +232,10 @@ class Checklist:
 async def _main():
 	checklist_inst = await Checklist.fetch()
 	checklist_inst.volumes(Subscription.VISUAL).effective_after(datetime.date(2024, 6, 1))
-	print(checklist_inst.df)
+	for page in checklist_inst:
+		print(repr(page))
+
+	print(f"Found {len(checklist_inst)} pages in the checklist")
 
 if __name__ == '__main__':
 	import asyncio

@@ -108,7 +108,7 @@ class AIPPage:
 		return self._page_text
 
 	def __repr__(self):
-		return f"AIPPage(page='{self._page_text}')"
+		return f"AIPPage(page='{self._page_text}', section={self.section})"
 
 	def _get_colour(self, flags_str: str = "") -> Optional[PageColour]:
 		"""Determines the colour of the page
