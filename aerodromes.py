@@ -1,61 +1,4 @@
-AERODROME_ICAO_MAP = {'NZLX': 'ALEXANDRA', 'NZAN': 'ANAMA', 'NZAR': 'ARDMORE', 'NZAS': 'ASHBURTON',
-						'NZAM': 'ASHBURTON MEDICAL CENTRE', 'NZAA': 'AUCKLAND', 'NZAW': 'AUCKLAND HARBOUR',
-						'NZJL': 'AUCKLAND HOSPITAL', 'NZBA': 'BALCLUTHA', 'NZJI': 'BAY OF ISLANDS HOSPITAL',
-						'NZBW': 'BURWOOD HOSPITAL', 'NZCG': 'CENTENNIAL PARK', 'NZCB': 'CENTRE BUSH',
-						'NZCI': 'CHATHAM IS/TUUTA', 'NZCV': 'CHEVIOT', 'NZCH': 'CHRISTCHURCH',
-						'NZJC': 'CHRISTCHURCH HOSPITAL', 'NZJJ': 'CHRISTCHURCH HOSPITAL HAGLEY', 'NZCL': 'CLOUDY BAY',
-						'NZCS': 'CROMWELL RACECOURSE', 'NZDV': 'DANNEVIRKE', 'NZDA': 'DARGAVILLE',
-						'NZJE': 'DARGAVILLE HOSPITAL', 'NZDY': 'DRURY', 'NZDN': 'DUNEDIN', 'NZDC': 'DUNEDIN CITY',
-						'NZDH': 'DUNEDIN HOSPITAL', 'NZDU': 'DUNSTAN HOSPITAL', 'NZEV': 'EVES VALLEY',
-						'NZFI': 'FEILDING', 'NZFG': 'FERN GULLY', 'NZFE': 'FERNSIDE FIELDS', 'NZFT': 'FLAT POINT',
-						'NZFF': 'FOREST FIELD', 'NZFH': 'FOX', 'NZFO': 'FOX GLACIER', 'NZFP': 'FOXPINE',
-						'NZFR': 'FOX RIVER', 'NZFJ': 'FRANZ JOSEF', 'NZGS': 'GISBORNE', 'NZJG': 'GISBORNE HOSPITAL',
-						'NZGH': 'GLACIER COUNTRY', 'NZGY': 'GLENORCHY', 'NZGT': 'GLENTANNER', 'NZGC': 'GORE',
-						'NZGO': 'GORE HOSPITAL', 'NZGB': 'GREAT BARRIER', 'NZGM': 'GREYMOUTH', 'NZHT': 'HAAST',
-						'NZHN': 'HAMILTON', 'NZHM': 'HANMER', 'NZHR': 'HANMER MEDICAL CENTRE', 'NZHS': 'HASTINGS',
-						'NZJH': 'HASTINGS HOSPITAL', 'NZHA': 'HAWERA', 'NZHB': 'HELENA BAY', 'NZHK': 'HOKITIKA',
-						'NZHF': 'HUKA FALLS', 'NZNV': 'INVERCARGILL', 'NZKO': 'KAIKOHE',
-						'NZKC': 'KAIKOURA MEDICAL CENTRE', 'NZKF': 'KAIPARA FLATS', 'NZKT': 'KAITAIA',
-						'NZJK': 'KAITAIA HOSPITAL', 'NZKM': 'KARAMEA', 'NZWE': 'KAUAROA BAY',
-						'NZKH': 'KENEPURU HOSPITAL', 'NZKN': 'KENSINGTON PARK', 'NZKK': 'KERIKERI/BAY OF ISLANDS',
-						'NZKP': 'KOPUTAROA', 'NZKY': 'KOWHAI', 'NZKU': 'KUPE', 'NZHP': 'LAKE HAUPIRI',
-						'NZLE': 'LAKE STATION/NELSON LAKES', 'NZLA': 'LOBURN ABBEY', 'NZLM': 'LUMSDEN MEDICAL CENTRE',
-						'NZMW': 'MAKARORA', 'NZOG': 'MAKARORA HELIPORT', 'NZVL': 'MANDEVILLE', 'NZMG': 'MANGONUI',
-						'NZSO': 'MARLBOROUGH SOUNDS', 'NZMA': 'MATAMATA', 'NZUA': 'MAUI A', 'NZUB': 'MAUI B',
-						'NZMB': 'MECHANICS BAY', 'NZME': 'MERCER', 'NZMV': 'METHVEN', 'NZMM': 'MIDDLEMORE HOSPITAL',
-						'NZML': 'MID WAIHO LOOP', 'NZMF': 'MILFORD SOUND', 'NZMK': 'MOTUEKA',
-						'NZKD': 'MOTU KAIKOURA ISLAND', 'NZMC': 'MOUNT COOK', 'NZMR': 'MURCHISON',
-						'NZUR': 'MURCHISON HOSPITAL', 'NZNR': 'NAPIER', 'NZNS': 'NELSON', 'NZNH': 'NELSON HOSPITAL',
-						'NZNP': 'NEW PLYMOUTH', 'NZNF': 'NORFOLK', 'NZNE': 'NORTH SHORE',
-						'NZJN': 'NORTH SHORE HOSPITAL', 'NZON': 'OBAN', 'NZOB': 'OCEAN BEACH', 'NZOH': 'OHAKEA',
-						'NZOX': 'OKIWI STATION', 'NZOF': 'OMAHA FLATS', 'NZOM': 'OMAKA', 'NZOA': 'OMARAMA',
-						'NZOW': 'ONETANGI', 'NZOI': 'ONGAIO ISLAND', 'NZOP': 'OPOTIKI', 'NZOT': 'OTAKI',
-						'NZOS': 'OTEHEI BAY', 'NZPA': 'PAIHIA', 'NZPS': 'PAIHIA WATERFRONT', 'NZPM': 'PALMERSTON NORTH',
-						'NZJM': 'PALMERSTON NORTH HOSPITAL', 'NZPW': 'PAPAWAI', 'NZPI': 'PARAKAI', 'NZPN': 'PICTON',
-						'NZPK': 'PIKES POINT', 'NZPO': 'PORANGAHAU', 'NZPH': 'PUDDING HILL', 'NZUK': 'PUKAKI',
-						'NZPU': 'PUKEKOHE', 'NZQN': 'QUEENSTOWN', 'NZQW': 'QUEENS WHARF', 'NZRA': 'RAGLAN',
-						'NZRI': 'RAKITATA ISLAND', 'NZRN': 'RANFURLY MEDICAL CENTRE', 'NZRT': 'RANGIORA',
-						'NZRK': 'RANGITAIKI', 'NZMX': 'RAROA', 'NZJW': 'RAWENE HOSPITAL', 'NZRD': 'ROSEDALE',
-						'NZRO': 'ROTORUA', 'NZJO': 'ROTORUA HOSPITAL', 'NZLF': 'ROTORUA LAKEFRONT',
-						'NZRL': 'ROTORUA LAKES', 'NZRX': 'ROXBURGH', 'NZRC': 'RYANS CREEK',
-						'NZJS': 'SOUTHLAND-KEW HOSPITAL', 'NZSF': 'SPRINGFIELD', 'NZSL': 'SPRINGHILL',
-						'NZSD': 'STRATFORD', 'NZAH': 'TAHAROA IRONSANDS', 'NZTI': 'TAIERI', 'NZVR': 'TAIHAPE',
-						'NZTK': 'TAKAKA', 'NZTC': 'TAPANUI MEDICAL CENTRE', 'NZJQ': 'TARANAKI BASE HOSPITAL',
-						'NZTS': 'TASMAN', 'NZTM': 'TAUMARUNUI', 'NZJT': 'TAUMARUNUI HOSPITAL', 'NZAP': 'TAUPO',
-						'NZJZ': 'TAUPO HOSPITAL', 'NZLT': 'TAUPO WATER', 'NZTG': 'TAURANGA',
-						'NZJA': 'TAURANGA HOSPITAL', 'NZTJ': 'TAWHAKI', 'NZMO': 'TE ANAU / MANAPOURI',
-						'NZFA': 'TE HAPUA', 'NZTL': 'TEKAPO', 'NZTP': 'TEKAPO / MACKENZIE', 'NZTE': 'TE KOWHAI',
-						'NZTT': 'TE KUITI', 'NZTQ': 'TE KUITI HOSPITAL', 'NZJP': 'TE PUIA SPRINGS HOSPITAL',
-						'NZTH': 'THAMES', 'NZJD': 'THAMES HOSPITAL', 'NZTU': 'TIMARU', 'NZTZ': 'TIMARU HOSPITAL',
-						'NZTO': 'TOKOROA', 'NZJX': 'TOKOROA HOSPITAL', 'NZTN': 'TURANGI',
-						'NZTW': 'TWIZEL MEDICAL CENTRE', 'NZKE': 'WAIHEKE', 'NZWV': 'WAIHI BEACH',
-						'NZHH': 'WAIKATO HOSPITAL', 'NZWM': 'WAIMATE', 'NZYP': 'WAIPUKURAU',
-						'NZMH': 'WAIRARAPA HOSPITAL', 'NZJY': 'WAIROA HOSPITAL', 'NZWQ': 'WAITIKI', 'NZWF': 'WANAKA',
-						'NZHC': 'WANAKA LAKES HEALTH CENTRE', 'NZWZ': 'WARKWORTH', 'NZWN': 'WELLINGTON',
-						'NZWH': 'WELLINGTON HOSPITAL', 'NZWJ': 'WELLSFORD', 'NZWL': 'WEST MELTON', 'NZWS': 'WESTPORT',
-						'NZWK': 'WHAKATANE', 'NZJF': 'WHAKATANE HOSPITAL', 'NZWG': 'WHANGAMATA', 'NZWU': 'WHANGANUI',
-						'NZJU': 'WHANGANUI HOSPITAL', 'NZWR': 'WHANGAREI', 'NZJR': 'WHANGAREI HOSPITAL',
-						'NZES': 'WHAREPAPA SOUTH', 'NZWP': 'WHENUAPAI'}
+AERODROME_ICAO_MAP: dict[str, str] = {'NZLX': 'Alexandra', 'NZAN': 'Anama', 'NZAR': 'Ardmore', 'NZAS': 'Ashburton', 'NZAM': 'Ashburton Medical Centre', 'NZAA': 'Auckland', 'NZAW': 'Auckland Harbour', 'NZJL': 'Auckland Hospital', 'NZBA': 'Balclutha', 'NZJI': 'Bay Of Islands Hospital', 'NZBW': 'Burwood Hospital', 'NZCG': 'Centennial Park', 'NZCB': 'Centre Bush', 'NZCI': 'Chatham Is/Tuuta', 'NZCV': 'Cheviot', 'NZCH': 'Christchurch', 'NZJC': 'Christchurch Hospital', 'NZJJ': 'Christchurch Hospital Hagley', 'NZCL': 'Cloudy Bay', 'NZCS': 'Cromwell Racecourse', 'NZDV': 'Dannevirke', 'NZDA': 'Dargaville', 'NZJE': 'Dargaville Hospital', 'NZDY': 'Drury', 'NZDN': 'Dunedin', 'NZDC': 'Dunedin City', 'NZDH': 'Dunedin Hospital', 'NZDU': 'Dunstan Hospital', 'NZEV': 'Eves Valley', 'NZFI': 'Feilding', 'NZFG': 'Fern Gully', 'NZFE': 'Fernside Fields', 'NZFT': 'Flat Point', 'NZFF': 'Forest Field', 'NZFH': 'Fox', 'NZFO': 'Fox Glacier', 'NZFP': 'Foxpine', 'NZFR': 'Fox River', 'NZFJ': 'Franz Josef', 'NZGS': 'Gisborne', 'NZJG': 'Gisborne Hospital', 'NZGH': 'Glacier Country', 'NZGY': 'Glenorchy', 'NZGT': 'Glentanner', 'NZGC': 'Gore', 'NZGO': 'Gore Hospital', 'NZGB': 'Great Barrier', 'NZGM': 'Greymouth', 'NZHT': 'Haast', 'NZHN': 'Hamilton', 'NZHM': 'Hanmer', 'NZHR': 'Hanmer Medical Centre', 'NZHS': 'Hastings', 'NZJH': 'Hastings Hospital', 'NZHA': 'Hawera', 'NZHB': 'Helena Bay', 'NZHK': 'Hokitika', 'NZHF': 'Huka Falls', 'NZNV': 'Invercargill', 'NZKO': 'Kaikohe', 'NZKC': 'Kaikoura Medical Centre', 'NZKF': 'Kaipara Flats', 'NZKT': 'Kaitaia', 'NZJK': 'Kaitaia Hospital', 'NZKM': 'Karamea', 'NZWE': 'Kauaroa Bay', 'NZKH': 'Kenepuru Hospital', 'NZKN': 'Kensington Park', 'NZKK': 'Kerikeri/Bay Of Islands', 'NZKP': 'Koputaroa', 'NZKY': 'Kowhai', 'NZKU': 'Kupe', 'NZHP': 'Lake Haupiri', 'NZLE': 'Lake Station/Nelson Lakes', 'NZLA': 'Loburn Abbey', 'NZLM': 'Lumsden Medical Centre', 'NZMW': 'Makarora', 'NZOG': 'Makarora Heliport', 'NZVL': 'Mandeville', 'NZMG': 'Mangonui', 'NZSO': 'Marlborough Sounds', 'NZMA': 'Matamata', 'NZUA': 'Maui A', 'NZUB': 'Maui B', 'NZMB': 'Mechanics Bay', 'NZME': 'Mercer', 'NZMV': 'Methven', 'NZMM': 'Middlemore Hospital', 'NZML': 'Mid Waiho Loop', 'NZMF': 'Milford Sound', 'NZMK': 'Motueka', 'NZKD': 'Motu Kaikoura Island', 'NZMC': 'Mount Cook', 'NZMR': 'Murchison', 'NZUR': 'Murchison Hospital', 'NZNR': 'Napier', 'NZNS': 'Nelson', 'NZNH': 'Nelson Hospital', 'NZNP': 'New Plymouth', 'NZNF': 'Norfolk', 'NZNE': 'North Shore', 'NZJN': 'North Shore Hospital', 'NZON': 'Oban', 'NZOB': 'Ocean Beach', 'NZOH': 'Ohakea', 'NZOX': 'Okiwi Station', 'NZOF': 'Omaha Flats', 'NZOM': 'Omaka', 'NZOA': 'Omarama', 'NZOW': 'Onetangi', 'NZOI': 'Ongaio Island', 'NZOP': 'Opotiki', 'NZOT': 'Otaki', 'NZOS': 'Otehei Bay', 'NZPA': 'Paihia', 'NZPS': 'Paihia Waterfront', 'NZPM': 'Palmerston North', 'NZJM': 'Palmerston North Hospital', 'NZPW': 'Papawai', 'NZPI': 'Parakai', 'NZPN': 'Picton', 'NZPK': 'Pikes Point', 'NZPO': 'Porangahau', 'NZPH': 'Pudding Hill', 'NZUK': 'Pukaki', 'NZPU': 'Pukekohe', 'NZQN': 'Queenstown', 'NZQW': 'Queens Wharf', 'NZRA': 'Raglan', 'NZRI': 'Rakitata Island', 'NZRN': 'Ranfurly Medical Centre', 'NZRT': 'Rangiora', 'NZRK': 'Rangitaiki', 'NZMX': 'Raroa', 'NZJW': 'Rawene Hospital', 'NZRD': 'Rosedale', 'NZRO': 'Rotorua', 'NZJO': 'Rotorua Hospital', 'NZLF': 'Rotorua Lakefront', 'NZRL': 'Rotorua Lakes', 'NZRX': 'Roxburgh', 'NZRC': 'Ryans Creek', 'NZJS': 'Southland-Kew Hospital', 'NZSF': 'Springfield', 'NZSL': 'Springhill', 'NZSD': 'Stratford', 'NZAH': 'Taharoa Ironsands', 'NZTI': 'Taieri', 'NZVR': 'Taihape', 'NZTK': 'Takaka', 'NZTC': 'Tapanui Medical Centre', 'NZJQ': 'Taranaki Base Hospital', 'NZTS': 'Tasman', 'NZTM': 'Taumarunui', 'NZJT': 'Taumarunui Hospital', 'NZAP': 'Taupo', 'NZJZ': 'Taupo Hospital', 'NZLT': 'Taupo Water', 'NZTG': 'Tauranga', 'NZJA': 'Tauranga Hospital', 'NZTJ': 'Tawhaki', 'NZMO': 'Te Anau / Manapouri', 'NZFA': 'Te Hapua', 'NZTL': 'Tekapo', 'NZTP': 'Tekapo / Mackenzie', 'NZTE': 'Te Kowhai', 'NZTT': 'Te Kuiti', 'NZTQ': 'Te Kuiti Hospital', 'NZJP': 'Te Puia Springs Hospital', 'NZTH': 'Thames', 'NZJD': 'Thames Hospital', 'NZTU': 'Timaru', 'NZTZ': 'Timaru Hospital', 'NZTO': 'Tokoroa', 'NZJX': 'Tokoroa Hospital', 'NZTN': 'Turangi', 'NZTW': 'Twizel Medical Centre', 'NZKE': 'Waiheke', 'NZWV': 'Waihi Beach', 'NZHH': 'Waikato Hospital', 'NZWM': 'Waimate', 'NZYP': 'Waipukurau', 'NZMH': 'Wairarapa Hospital', 'NZJY': 'Wairoa Hospital', 'NZWQ': 'Waitiki', 'NZWF': 'Wanaka', 'NZHC': 'Wanaka Lakes Health Centre', 'NZWZ': 'Warkworth', 'NZWN': 'Wellington', 'NZWH': 'Wellington Hospital', 'NZWJ': 'Wellsford', 'NZWL': 'West Melton', 'NZWS': 'Westport', 'NZWK': 'Whakatane', 'NZJF': 'Whakatane Hospital', 'NZWG': 'Whangamata', 'NZWU': 'Whanganui', 'NZJU': 'Whanganui Hospital', 'NZWR': 'Whangarei', 'NZJR': 'Whangarei Hospital', 'NZES': 'Wharepapa South', 'NZWP': 'Whenuapai'}
 
 
 async def _main():
@@ -84,6 +27,10 @@ async def _main():
 				raise ValueError(f"Invalid row in aerodrome table: {row}")
 			if not icao.startswith('NZ'):
 				raise ValueError(f"Invalid ICAO code in aerodrome table: {icao}")
+
+			# title case the name
+			name = name.title()
+
 			aerodromes[icao] = name
 
 	print(aerodromes)

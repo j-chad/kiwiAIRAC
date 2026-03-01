@@ -145,7 +145,7 @@ class AIPPage:
 				return None
 
 			return AERODROME_CHARTS_URL.format(
-				name=aerodrome_name.lower(),
+				name=aerodrome_name,
 				icao=self.aerodrome,
 				document=self.document,
 				chart=self.page_number,
