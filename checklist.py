@@ -10,7 +10,7 @@ import pandas as pd
 from pypdf import PdfReader
 
 from aip_page import AIPPage, categorise_pages
-from download import downloader, DownloadJob, RichProgressReporter
+from download import downloader, DownloadJob, RichProgressReporter, RichBatchProgressReporter
 from errors import ParseError
 from models import Volume, Subscription
 
@@ -233,9 +233,9 @@ async def _main():
 	checklist_inst = await Checklist.fetch()
 	checklist_inst.volumes(Subscription.VISUAL).effective_after(datetime.date(2024, 6, 1))
 
-	jobs = (DownloadJob(url=page.url, content_types=['application/pdf']) for page in checklist_inst if page.url is not None)
+	jobs = [DownloadJob(url=page.url, content_types=['application/pdf']) for page in checklist_inst if page.url is not None]
 
-	with RichProgressReporter() as progress:
+	with RichBatchProgressReporter(len(jobs)) as progress:
 		await downloader.download_many(jobs, progress=progress)
 
 if __name__ == '__main__':

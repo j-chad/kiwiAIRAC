@@ -6,6 +6,7 @@ import aerodromes
 from errors import ParseError, DocumentAccessError
 
 GENERIC_PATTERN = re.compile(r"([a-zA-Z]+) (\d+)\.(\d+)-(\d+)")
+AERODROME_CHART_PAGE_IDENTIFIER_PATTERN = re.compile(r"(\d+)\.(\d+)([YG]?)")
 AERODROME_PATTERN = re.compile(r"(NZ[A-Z]{2}) AD 2-(\d+)(?:\.(\d+)([YG]?))?")
 UNAVAILABLE_PATTERN = re.compile(r"([a-zA-Z ]+) (\d+)-(\d+)")
 
@@ -144,9 +145,7 @@ class AIPPage:
 
 		# Charts
 		if self.section == Section.AERODROME_CHARTS and self.aerodrome is not None:
-			a = self._chart_url()
-			print(a)
-			return a
+			return self._chart_url()
 
 		section_name = SUBSECTION_NAMES.get(self.section, {}).get(self.subsection)
 		if section_name is None:
@@ -171,11 +170,9 @@ class AIPPage:
 		if aerodrome_charts is None:
 			return None
 
-		# search the list of charts for the one with the correct document and page number
-		# e.g 51.1
 		chart_file = None
 		for chart in aerodrome_charts:
-			match = re.findall(r"(\d+)\.(\d+)([YG]?)", chart)
+			match = AERODROME_CHART_PAGE_IDENTIFIER_PATTERN.findall(chart)
 			if not match:
 				continue
 

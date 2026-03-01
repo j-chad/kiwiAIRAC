@@ -67,12 +67,46 @@ class RichProgressReporter(ProgressReporter):
 		self.progress.update(task_id, advance=n)
 
 	def finish(self, task_id: TaskID) -> None:
-		# noinspection PyTypeChecker
-		total = self.progress.tasks[task_id].total
-		self.progress.update(task_id, completed=total)
+		self.progress.remove_task(task_id)
 
 	def cache_hit(self, label: str) -> None:
 		self.console.print(f"[green]Cache hit:[/green] {label}")
+
+class RichBatchProgressReporter(ProgressReporter):
+	def __init__(self, total: int, desc: str = "Downloading files..."):
+		self.console = Console()
+		self.progress = Progress(
+			TextColumn("{task.description}"),
+			BarColumn(),
+			TimeRemainingColumn(),
+			transient=True,
+			console=self.console,
+		)
+		self.total = total
+		self.description = desc
+
+	def __enter__(self):
+		self.progress.__enter__()
+		self.task_id = self.progress.add_task(self.description, total=self.total)
+		return self
+
+	def __exit__(self, exc_type, exc, tb):
+		return self.progress.__exit__(exc_type, exc, tb)
+
+	def start(self, label: str) -> TaskID:
+		return self.task_id
+
+	def update_total(self, task_id: TaskID, total: Optional[int]) -> None:
+		pass  # total is fixed for the batch
+
+	def advance(self, task_id: TaskID, n: int) -> None:
+		pass
+
+	def finish(self, task_id: TaskID) -> None:
+		self.progress.advance(task_id, 1)
+
+	def cache_hit(self, label: str) -> None:
+		self.progress.advance(self.task_id, 1)
 
 class Proxy(Protocol):
 	def should_proxy(self, url: str) -> bool:
