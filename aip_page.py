@@ -6,7 +6,7 @@ import aerodromes
 from errors import ParseError, DocumentAccessError
 
 GENERIC_PATTERN = re.compile(r"([a-zA-Z]+) (\d+)\.(\d+)-(\d+)")
-AERODROME_PATTERN = re.compile(r"(NZ[A-Z]{2}) AD 2-(\d+)(?:\.(\d+)(Y?))?")
+AERODROME_PATTERN = re.compile(r"(NZ[A-Z]{2}) AD 2-(\d+)(?:\.(\d+)([YG]?))?")
 UNAVAILABLE_PATTERN = re.compile(r"([a-zA-Z ]+) (\d+)-(\d+)")
 
 # Where the emergency document is located in the En Route section
@@ -15,6 +15,7 @@ EMERGENCY_DOCUMENT = 15
 class PageColour(Enum):
 	YELLOW = 'Y'
 	PINK = 'P'
+	GREEN = 'G'
 
 class Section(Enum):
 	BLANK = 'Blank'
@@ -54,7 +55,7 @@ SECTION_URL_PATTERNS: dict[Section, str] = {
 	Section.AERODROMES: BASE_URL + "Aerodromes-AD1/{subsection_name}/AD_{subsection}.{document:02d}.pdf",
 }
 AERODROME_URL = BASE_URL + "Aerodromes-AD1/AERODROMES/{aerodrome}_AD2.pdf"
-AERODROME_CHARTS_URL = BASE_URL + "Aerodrome-Charts/{name}-{icao}/{name}.{document}.{chart}.pdf"
+AERODROME_CHARTS_URL = BASE_URL + "Aerodrome-Charts/{name}-{icao}/{icao}_{document}.{chart}.pdf"
 
 class AIPPage:
 	_page_text: str
@@ -115,14 +116,18 @@ class AIPPage:
 	def _get_colour(self, flags_str: str = "") -> Optional[PageColour]:
 		"""Determines the colour of the page
 
-		- If the page has a "Y" flag, it is yellow.
+		- If the page has a flag indicating a colour, it is that colour (Y for yellow, G for green).
 		- If the page is the emergency document in the En Route section, it is pink.
 		- Otherwise, it is white (None).
 		"""
-		if flags_str == "Y":
-			return PageColour.YELLOW
-		elif self.section == Section.EN_ROUTE and self.document == EMERGENCY_DOCUMENT:
+		try:
+			return PageColour(flags_str)
+		except ValueError:
+			pass
+
+		if self.section == Section.EN_ROUTE and self.document == EMERGENCY_DOCUMENT:
 			return PageColour.PINK
+
 		return None
 
 	@property

@@ -146,8 +146,8 @@ class _DownloadManager:
 		cache_expiry_days: int = CACHE_EXPIRY_DAYS,
 		concurrency: int = 8,
 		rps: float = 1.0,
-		timeout: float = 30.0,
-		max_retries: int = 3,
+		timeout: float = 10.0,
+		max_retries: int = 1,
 		max_jitter_seconds: float = 2,
 	):
 		self._download_dir = download_dir
