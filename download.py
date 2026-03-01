@@ -144,7 +144,7 @@ class _DownloadManager:
 		user_agent: str,
 		proxy: Proxy | None = None,
 		cache_expiry_days: int = CACHE_EXPIRY_DAYS,
-		concurrency: int = 2,
+		concurrency: int = 8,
 		rps: float = 1.0,
 		timeout: float = 30.0,
 		max_retries: int = 3,

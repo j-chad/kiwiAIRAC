@@ -2,6 +2,7 @@ import re
 from enum import Enum
 from typing import Optional, Iterable
 
+import aerodromes
 from errors import ParseError, DocumentAccessError
 
 GENERIC_PATTERN = re.compile(r"([a-zA-Z]+) (\d+)\.(\d+)-(\d+)")
@@ -50,9 +51,10 @@ BASE_URL = "https://www.aip.net.nz/assets/AIP/"
 SECTION_URL_PATTERNS: dict[Section, str] = {
 	Section.GENERAL: BASE_URL + "General-GEN/{subsection}-{subsection_name}/GEN_{subsection}.{document}.pdf",
 	Section.EN_ROUTE: BASE_URL + "En-route-ENR/{subsection}-{subsection_name}/ENR_{subsection}.{document:02d}.pdf",
-	Section.AERODROMES: BASE_URL + "Aerodromes-AD1/{subsection_name}/AD_{subsection}.{document:02d}.pdf"
+	Section.AERODROMES: BASE_URL + "Aerodromes-AD1/{subsection_name}/AD_{subsection}.{document:02d}.pdf",
 }
 AERODROME_URL = BASE_URL + "Aerodromes-AD1/AERODROMES/{aerodrome}_AD2.pdf"
+AERODROME_CHARTS_URL = BASE_URL + "Aerodrome-Charts/{name}-{icao}/{name}.{document}.{chart}.pdf"
 
 class AIPPage:
 	_page_text: str
@@ -127,16 +129,27 @@ class AIPPage:
 	def simple_url(self) -> Optional[str]:
 		"""Returns the URL for the page purely based on the page information.
 
-		More complex sections like aerodrome charts may not have a predictable URL
-		so this method will return None for those.
-
 		:return: the URL for the page, or None if it cannot be determined lexically
 		"""
 		if not self.available:
 			return None
 
+		# Special case for specific aerodrome documents in the AD section
 		if self.section == Section.AERODROMES and self.aerodrome is not None:
 			return AERODROME_URL.format(aerodrome=self.aerodrome)
+
+		# Charts
+		if self.section == Section.AERODROME_CHARTS and self.aerodrome is not None:
+			aerodrome_name = aerodromes.AERODROME_ICAO_MAP.get(self.aerodrome)
+			if aerodrome_name is None:
+				return None
+
+			return AERODROME_CHARTS_URL.format(
+				name=aerodrome_name.lower(),
+				icao=self.aerodrome,
+				document=self.document,
+				chart=self.page_number,
+			)
 
 		section_name = SUBSECTION_NAMES.get(self.section, {}).get(self.subsection)
 		if section_name is None:
@@ -146,7 +159,11 @@ class AIPPage:
 		if url_pattern is None:
 			return None
 
-		return url_pattern.format(subsection=self.subsection, subsection_name=section_name, document=self.document)
+		return url_pattern.format(
+			subsection=self.subsection,
+			subsection_name=section_name,
+			document=self.document
+		)
 
 def categorise_pages(pages: Iterable[AIPPage]) -> tuple[dict[PageColour, dict[str, list[AIPPage]]], list[AIPPage]]:
 	"""Collects the AIP pages by colour and URL.
@@ -162,7 +179,7 @@ def categorise_pages(pages: Iterable[AIPPage]) -> tuple[dict[PageColour, dict[st
 			uncollected.append(page)
 		else:
 			collected.setdefault(page.colour, {}).setdefault(url, []).append(page)
-	
+
 	return collected, uncollected
 
 

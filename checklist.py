@@ -233,7 +233,10 @@ async def _main():
 	checklist_inst = await Checklist.fetch()
 	checklist_inst.volumes(Subscription.VISUAL).effective_after(datetime.date(2024, 6, 1))
 
-	print(categorise_pages(checklist_inst))
+	jobs = (DownloadJob(url=page.simple_url, content_types=['application/pdf']) for page in checklist_inst if page.simple_url is not None)
+
+	with RichProgressReporter() as progress:
+		await downloader.download_many(jobs, progress=progress)
 
 if __name__ == '__main__':
 	import asyncio
