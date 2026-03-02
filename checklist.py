@@ -9,7 +9,7 @@ import camelot
 import pandas as pd
 from pypdf import PdfReader
 
-from aip_page import AIPPage, DuplexSheet
+from aip_page import AIPPage, Sheet
 from download import downloader, DownloadJob, RichProgressReporter, RichBatchProgressReporter
 from errors import ParseError
 from models import Volume, Subscription
@@ -82,7 +82,7 @@ class Checklist:
 		self._mask &= self._df["Effective"] > pd.to_datetime(date)
 		return self
 
-	def _for_duplex_printing(self) -> 'Checklist':
+	def _for_duplex_printing(self) -> pd.DataFrame:
 		"""Expands the filters to be suitable for duplex printing.
 
 		When pages are updated the reverse side may not be updated and therefore lost during filtering.
@@ -100,19 +100,28 @@ class Checklist:
 		buddies = {j for i in selected_idx if (j := buddy_idx(i)) is not None}
 		expanded = selected_idx | buddies
 
-		self._mask = self._df.index.isin(expanded)
-		return self
+		mask = self._df.index.isin(expanded)
+		return self._df[mask].reset_index(drop=True)
 
-	def sheets(self) -> Iterator[DuplexSheet]:
+	def sheets(self, duplex=True) -> Iterator[Sheet]:
 		"""Iterates over the checklist in pairs of duplex pages, yielding a DuplexSheet for each pair."""
-		df = self._df_filtered.reset_index(drop=True)
-		for i in range(0, len(df), 2):
-			front_page_number = df.loc[i, "Page No"]
-			back_page_number = df.loc[i + 1, "Page No"] if i + 1 < len(df) else None
-			yield DuplexSheet(
-				front=AIPPage(front_page_number),
-				back=AIPPage(back_page_number)
-			)
+		df = self._for_duplex_printing() if duplex else self._df_filtered.reset_index(drop=True)
+
+		if duplex:
+			for i in range(0, len(df), 2):
+				front_page_number = df.loc[i, "Page No"]
+				back_page_number = df.loc[i + 1, "Page No"] if i + 1 < len(df) else None
+				yield Sheet(
+					front=AIPPage(front_page_number),
+					back=AIPPage(back_page_number)
+				)
+		else:
+			for i in range(len(df)):
+				page_number = df.loc[i, "Page No"]
+				yield Sheet(
+					front=AIPPage(page_number),
+					back=None
+				)
 
 	def reset_filters(self):
 		"""Reset all filters applied to the checklist."""
