@@ -1,7 +1,6 @@
 import datetime
 import pathlib
 import re
-import tempfile
 from itertools import zip_longest
 from typing import Iterator
 
@@ -57,28 +56,29 @@ class Checklist:
 		self._path = pdf_path
 		self._width = self._get_pdf_width()
 		pages = self._get_combined_pages()
+
 		self._df = self._extract_tables(pages)
-		self._collapse_blank_pages()
+		self._mask = pd.Series([True] * len(self._df))
 
 	def __len__(self) -> int:
 		"""Returns the number of rows in the checklist."""
-		return len(self._df)
+		return len(self._df_filtered)
 
 	def __iter__(self) -> Iterator[AIPPage]:
 		"""Iterates over the rows in the checklist, yielding an AIPPage for each row."""
-		return (AIPPage(page_number) for page_number in self._df["Page No"])
+		return (AIPPage(page_number) for page_number in self._df_filtered["Page No"])
 
 	def volumes(self, volumes: Subscription | set[Volume]) -> 'Checklist':
 		"""Filter the checklist to only include rows that are relevant to the specified volumes."""
 		if isinstance(volumes, Subscription):
 			volumes = volumes.value
 
-		self._df = self._df[self._df["Volume"].apply(lambda v: not v.isdisjoint(volumes))].reset_index(drop=True)
+		self._mask &= self._df["Volume"].apply(lambda v: not v.isdisjoint(volumes))
 		return self
 
 	def effective_after(self, date: datetime.date) -> 'Checklist':
 		"""Filter the checklist to only include rows with an effective date after the specified date."""
-		self._df = self._df[self._df["Effective"] > pd.to_datetime(date)].reset_index(drop=True)
+		self._mask &= self._df["Effective"] > pd.to_datetime(date)
 		return self
 
 	def _get_pdf_width(self) -> int:
@@ -149,6 +149,11 @@ class Checklist:
 		tables = map(lambda t: self._normalise_df(t.df), tables)
 
 		return tables
+
+	@property
+	def _df_filtered(self) -> pd.DataFrame:
+		"""Returns the filtered DataFrame based on the current mask."""
+		return self._df[self._mask]
 
 	@staticmethod
 	def _normalise_df(df: pd.DataFrame) -> pd.DataFrame:
@@ -232,7 +237,7 @@ class Checklist:
 
 async def _main():
 	checklist_inst = await Checklist.fetch()
-	# checklist_inst.volumes(Subscription.VISUAL).effective_after(datetime.date(2024, 6, 1))
+	checklist_inst.volumes(Subscription.VISUAL).effective_after(datetime.date(2024, 6, 1))
 
 	categorise_pages(checklist_inst)
 
