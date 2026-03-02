@@ -9,7 +9,7 @@ import camelot
 import pandas as pd
 from pypdf import PdfReader
 
-from aip_page import AIPPage, categorise_pages
+from aip_page import AIPPage, DuplexSheet
 from download import downloader, DownloadJob, RichProgressReporter, RichBatchProgressReporter
 from errors import ParseError
 from models import Volume, Subscription
@@ -82,8 +82,8 @@ class Checklist:
 		self._mask &= self._df["Effective"] > pd.to_datetime(date)
 		return self
 
-	def for_duplex_printing(self) -> 'Checklist':
-		"""Changes the filters to be suitable for duplex printing.
+	def _for_duplex_printing(self) -> 'Checklist':
+		"""Expands the filters to be suitable for duplex printing.
 
 		When pages are updated the reverse side may not be updated and therefore lost during filtering.
 		This method ensures that if one page in a pair of duplex pages is updated, the other page will also be included in the checklist, even if it doesn't match the other filters.
@@ -102,6 +102,17 @@ class Checklist:
 
 		self._mask = self._df.index.isin(expanded)
 		return self
+
+	def sheets(self) -> Iterator[DuplexSheet]:
+		"""Iterates over the checklist in pairs of duplex pages, yielding a DuplexSheet for each pair."""
+		df = self._df_filtered.reset_index(drop=True)
+		for i in range(0, len(df), 2):
+			front_page_number = df.loc[i, "Page No"]
+			back_page_number = df.loc[i + 1, "Page No"] if i + 1 < len(df) else None
+			yield DuplexSheet(
+				front=AIPPage(front_page_number),
+				back=AIPPage(back_page_number)
+			)
 
 	def reset_filters(self):
 		"""Reset all filters applied to the checklist."""
@@ -271,7 +282,7 @@ async def _main():
 	checklist_inst.volumes(Subscription.VISUAL).effective_after(datetime.date(2026, 2, 18))
 	checklist_inst.for_duplex_printing()
 
-	categorise_pages(checklist_inst)
+	# categorise_pages(checklist_inst)
 
 	jobs = [DownloadJob(url=page.url, content_types=['application/pdf']) for page in checklist_inst if page.url is not None]
 

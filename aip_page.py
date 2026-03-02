@@ -191,15 +191,36 @@ class AIPPage:
 
 @dataclasses.dataclass(frozen=True)
 class Sheet:
+	"""Represents a sheet of paper in the printed AIP, which may contain one or two pages depending on whether it is printed single-sided or double-sided."""
 	front: AIPPage
-	back: Optional[AIPPage] = None
+	back: Optional[AIPPage]
 
 	def __post_init__(self):
-		if self.back is not None and self.back.section != Section.BLANK:
-			if self.front.colour != self.back.colour:
-				raise ValueError(f"Cannot pair pages of different colours: {self.front} and {self.back}")
-			if self.front.url != self.back.url:
-				raise ValueError(f"Cannot pair pages with different URLs: {self.front} and {self.back}")
+		if self.front.section == Section.BLANK:
+			raise ValueError("Front page cannot be blank")
+
+		if self.back is None or self.back.section == Section.BLANK:
+			return
+
+		if self.front.colour != self.back.colour:
+			raise ValueError(f"Cannot pair pages of different colours: {self.front} and {self.back}")
+		if self.front.url != self.back.url:
+			raise ValueError(f"Cannot pair pages with different URLs: {self.front} and {self.back}")
+
+	@property
+	def is_duplex(self) -> bool:
+		"""Returns whether the sheet is printed double-sided."""
+		return self.back is not None
+
+	@property
+	def url(self) -> Optional[str]:
+		"""Returns the URL for the sheet"""
+		return self.front.url
+
+	@property
+	def colour(self) -> Optional[PageColour]:
+		"""Returns the colour of the sheet, which is determined by the colour of the front page."""
+		return self.front.colour
 
 # def categorise_pages(pages: Iterable[AIPPage]) -> dict[PageColour, dict[str, list[AIPPage]]]:
 # 	"""Collects the AIP pages by colour and URL.

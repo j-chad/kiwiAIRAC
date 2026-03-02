@@ -9,9 +9,11 @@ async def main():
 	checklist.volumes(Subscription.VISUAL).effective_after(date(2026, 2, 17))
 	checklist.for_duplex_printing()
 
+	sheets = checklist.sheets()
 
-	update_pdf = stitch_duplex(checklist)
-	change_pdf = generate_change_pdf(checklist)
+
+	# update_pdf = stitch_duplex(checklist)
+	# change_pdf = generate_change_pdf(checklist)
 
 if __name__ == "__main__":
 	import asyncio
