@@ -4,38 +4,41 @@ from typing import Iterable
 
 from pypdf import PdfReader, PdfWriter
 
-from aip_page import AIPPage
+from aip_page import AIPPage, PageColour, Section
 
-def stitch_pdfs(pdf_paths: Iterable[Path], output_path: Path) -> Path:
-	writer = PdfWriter()
+Url = str
+PageGrouping = dict[PageColour | None, dict[Url, tuple[tuple[AIPPage]]]]
 
-	for pdf_path in pdf_paths:
-		with open(pdf_path, 'rb') as pdf_file:
-			reader = PdfReader(pdf_file)
-			for page in reader.pages:
-				writer.add_page(page)
+class Stitcher:
+	"""Utility class for stitching together multiple AIP pages into a single PDF document."""
 
-	with open(output_path, 'wb') as output_pdf_file:
-		writer.write(output_pdf_file)
+	_pages: PageGrouping
 
-	return output_path
+	def __init__(self, pages: Iterable[AIPPage], *, duplex: bool = True):
+		self.duplex = duplex
 
-def extract_pages(pdf_path: Path, pages: Iterable[AIPPage], output_dir: Path) -> Path:
-	if not output_dir.is_dir():
-		raise NotADirectoryError(pdf_path)
+		self._pages = self._group_pages(pages)
 
-	output_pdf_path = output_dir / f'{uuid.uuid7()}.pdf'
-
-	writer = PdfWriter()
-	with open(pdf_path, 'rb') as pdf_file:
-		reader = PdfReader(pdf_file)
-
+	def _group_pages(self, pages: Iterable[AIPPage]) -> PageGrouping:
+		"""Groups the given pages by colour, url and runs of consecutive pages."""
+		grouping: PageGrouping = {}
+		current_run: list[AIPPage] = []
 		for page in pages:
-			if not page.available:
-				continue
-			writer.add_page(reader.pages[page.page_number - 1])
+			if page.section == Section.BLANK:
+				current_run.append(page)
 
-		with open(output_pdf_path, 'wb') as output_pdf_file:
-			writer.write(output_pdf_file)
+			url = page.url()
+			if url is None:
+				raise ValueError(f"Page {page._page_text} does not have a valid URL")
+
+			if page.colour not in grouping:
+				grouping[page.colour] = {}
+
+			if url not in grouping[page.colour]:
+				grouping[page.colour][url] = []
+
+			grouping[page.colour][url].append(page)
+
+		return grouping
 
 

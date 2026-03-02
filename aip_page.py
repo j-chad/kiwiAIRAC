@@ -1,3 +1,4 @@
+import dataclasses
 import re
 from enum import Enum
 from typing import Optional, Iterable
@@ -188,21 +189,33 @@ class AIPPage:
 
 		return None
 
-def categorise_pages(pages: Iterable[AIPPage]) -> dict[PageColour, dict[str, list[AIPPage]]]:
-	"""Collects the AIP pages by colour and URL.
+@dataclasses.dataclass(frozen=True)
+class Sheet:
+	front: AIPPage
+	back: Optional[AIPPage] = None
 
-	Pages that do not have a predictable URL are returned in the second element of the tuple.
-	"""
-	collected: dict[PageColour | None, dict[str, list[AIPPage]]] = {}
+	def __post_init__(self):
+		if self.back is not None and self.back.section != Section.BLANK:
+			if self.front.colour != self.back.colour:
+				raise ValueError(f"Cannot pair pages of different colours: {self.front} and {self.back}")
+			if self.front.url != self.back.url:
+				raise ValueError(f"Cannot pair pages with different URLs: {self.front} and {self.back}")
 
-	for page in pages:
-		url = page.url
-		if url is None:
-			raise DocumentAccessError(f"Could not determine URL for page: {page}")
-
-		collected.setdefault(page.colour, {}).setdefault(url, []).append(page)
-
-	return collected
+# def categorise_pages(pages: Iterable[AIPPage]) -> dict[PageColour, dict[str, list[AIPPage]]]:
+# 	"""Collects the AIP pages by colour and URL.
+#
+# 	Pages that do not have a predictable URL are returned in the second element of the tuple.
+# 	"""
+# 	collected: dict[PageColour | None, dict[str, list[AIPPage]]] = {}
+#
+# 	for page in pages:
+# 		url = page.url
+# 		if url is None:
+# 			raise DocumentAccessError(f"Could not determine URL for page: {page}")
+#
+# 		collected.setdefault(page.colour, {}).setdefault(url, []).append(page)
+#
+# 	return collected
 
 
 
