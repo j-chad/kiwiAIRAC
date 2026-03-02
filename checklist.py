@@ -1,6 +1,7 @@
 import datetime
 import pathlib
 import re
+from collections import Counter
 from itertools import zip_longest
 from typing import Iterator
 
@@ -81,6 +82,31 @@ class Checklist:
 		self._mask &= self._df["Effective"] > pd.to_datetime(date)
 		return self
 
+	def for_duplex_printing(self) -> 'Checklist':
+		"""Changes the filters to be suitable for duplex printing.
+
+		When pages are updated the reverse side may not be updated and therefore lost during filtering.
+		This method ensures that if one page in a pair of duplex pages is updated, the other page will also be included in the checklist, even if it doesn't match the other filters.
+		"""
+		selected_idx = set(self._df.index[self._mask])
+
+		n = len(self._df)
+		def buddy_idx(i: int) -> int | None:
+			# 0-based parity: if index is even, buddy is next page; if index is odd, buddy is previous page
+			is_front = i % 2 == 0
+			j = i + 1 if is_front else i - 1
+			return j if 0 <= j < n else None
+
+		buddies = {j for i in selected_idx if (j := buddy_idx(i)) is not None}
+		expanded = selected_idx | buddies
+
+		self._mask = self._df.index.isin(expanded)
+		return self
+
+	def reset_filters(self):
+		"""Reset all filters applied to the checklist."""
+		self._mask = pd.Series([True] * len(self._df))
+
 	def _get_pdf_width(self) -> int:
 		"""Returns the width of the PDF pages, and checks that all pages have the same width."""
 		reader = PdfReader(self._path)
@@ -138,12 +164,17 @@ class Checklist:
 		if tables.n != len(pages) * len(areas):
 			raise ParseError(f"Expected to find {len(pages) * len(areas)} tables, but found {tables.n}")
 
+		table_per_page_counter = Counter()
 		for table in tables:
+			table_per_page_counter[table.page] += 1
 			if table.parsing_report['accuracy'] < MIN_TABLE_PARSE_ACCURACY:
 				raise ParseError(f"Low parsing accuracy: {table.parsing_report['accuracy']}%")
+		for page in pages:
+			if table_per_page_counter[page] != len(areas):
+				raise ParseError(f"Expected to find {len(areas)} tables on page {page}, but found {table_per_page_counter[page]}")
 
 		# sort tables by their x-coordinate (i.e. left to right)
-		tables = sorted(tables, key = lambda t: t._bbox[0])
+		tables = sorted(tables, key = lambda t: (t.page, t.parse['bbox_body'][0]))
 
 		# normalise the tables into a consistent format
 		tables = map(lambda t: self._normalise_df(t.df), tables)
@@ -237,7 +268,8 @@ class Checklist:
 
 async def _main():
 	checklist_inst = await Checklist.fetch()
-	checklist_inst.volumes(Subscription.VISUAL).effective_after(datetime.date(2024, 6, 1))
+	checklist_inst.volumes(Subscription.VISUAL).effective_after(datetime.date(2026, 2, 18))
+	checklist_inst.for_duplex_printing()
 
 	categorise_pages(checklist_inst)
 
