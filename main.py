@@ -1,4 +1,5 @@
 from datetime import date
+from pathlib import Path
 
 from checklist import Checklist
 from models import Subscription
@@ -11,7 +12,8 @@ async def main():
 	checklist.sheets()
 
 	sheets = checklist.sheets()
-	await stitch(sheets)
+
+	await stitch(sheets, Path("output"))
 
 
 	# update_pdf = stitch_duplex(checklist)

@@ -5,6 +5,7 @@ from typing import Iterable
 from pypdf import PdfReader, PdfWriter
 
 from aip_page import AIPPage, PageColour, Section, Sheet
+from download import downloader, DownloadJob, RichProgressReporter
 
 Url = str
 
@@ -17,7 +18,7 @@ async def stitch(sheets: Iterable[Sheet], output_dir: Path):
 	for colour, colour_sheets in colour_groups.items():
 		file_name = "WHITE" if colour is None else colour.name
 		file_path = output_dir / f"{file_name}.pdf"
-		_stitch_document(colour_sheets, file_path)
+		await _stitch_document(colour_sheets, file_path)
 
 def _group_by_colour(sheets: Iterable[Sheet]) -> dict[PageColour | None, list[Sheet]]:
 	"""Groups the given sheets by colour"""
@@ -32,9 +33,22 @@ def _group_by_colour(sheets: Iterable[Sheet]) -> dict[PageColour | None, list[Sh
 
 	return grouping
 
-def _stitch_document(sheets: Iterable[Sheet], file_path: Path):
+async def _stitch_document(sheets: Iterable[Sheet], file_path: Path):
 	"""Stitches the given sheets together into a single PDF file at the given file path."""
+	writer = PdfWriter()
+
 	runs = _find_url_runs(sheets)
+	for run in runs:
+		job = DownloadJob(run[0].url, content_types=["application/pdf"])
+		with RichProgressReporter() as progress:
+			document = await downloader.download(job, progress=progress)
+
+		with open(document, "rb") as f:
+			reader = PdfReader(f)
+			for sheet in run:
+				writer.add_page(reader.pages[sheet.front.page_number - 1])
+				if sheet.is_duplex:
+					writer.add_page(reader.pages[sheet.back.page_number - 1])
 
 
 def _find_url_runs(sheets: Iterable[Sheet]) -> list[list[Sheet]]:
