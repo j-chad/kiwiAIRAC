@@ -2,14 +2,16 @@ from datetime import date
 
 from checklist import Checklist
 from models import Subscription
+from stitcher import stitch
 
 
 async def main():
 	checklist = await Checklist.fetch()
 	checklist.volumes(Subscription.VISUAL).effective_after(date(2026, 2, 17))
-	checklist.for_duplex_printing()
+	checklist.sheets()
 
 	sheets = checklist.sheets()
+	await stitch(sheets)
 
 
 	# update_pdf = stitch_duplex(checklist)
