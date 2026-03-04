@@ -2,12 +2,13 @@ import uuid
 from pathlib import Path
 from typing import Iterable
 
-from pypdf import PdfReader, PdfWriter
+from pdfminer.pdfpage import PDFPage
+from pypdf import PdfReader, PdfWriter, PageObject
 
 from aip_page import AIPPage, PageColour, Section, Sheet
 from download import downloader, DownloadJob, RichProgressReporter
 
-Url = str
+A4_SIZE = (210, 297)  # in mm
 
 async def stitch(sheets: Iterable[Sheet], output_dir: Path):
 	"""Stitches the given sheets together into PDF files in the given output directory, grouped by colour."""
@@ -36,6 +37,36 @@ def _group_by_colour(sheets: Iterable[Sheet]) -> dict[PageColour | None, list[Sh
 async def _stitch_document(sheets: Iterable[Sheet], file_path: Path):
 	"""Stitches the given sheets together into a single PDF file at the given file path."""
 	writer = PdfWriter()
+
+	a5_back_buffer: list[PageObject] = []
+	a5_front_buffer: list[PageObject] = []
+	def flush_buffers():
+		"""Flushes the A5 buffers by placing the A5 pages onto A4 pages and adding them to the writer."""
+		if len(a5_front_buffer) != len(a5_back_buffer):
+			raise ValueError(f"Cannot flush buffers with different lengths: {len(a5_front_buffer)} and {len(a5_back_buffer)}")
+
+		for i in range(0, len(a5_front_buffer), 2):
+			left_front = a5_front_buffer[i]
+			right_front = a5_front_buffer[i + 1]
+
+			left_back = a5_back_buffer[i]
+			right_back = a5_back_buffer[i + 1]
+
+			# Front side (normal left/right)
+			front_a4 = _make_blank_a4()
+			_place_a5_on_a4(front_a4, left_front, slot="left")
+			_place_a5_on_a4(front_a4, right_front, slot="right")
+			writer.add_page(front_a4)
+
+			# Back side:
+			# Swap left/right so that duplex long-edge aligns backs to fronts.
+			back_a4 = _make_blank_a4()
+			_place_a5_on_a4(back_a4, left_back, slot="right")
+			_place_a5_on_a4(back_a4, right_back, slot="left")
+			writer.add_page(back_a4)
+
+		a5_front_buffer.clear()
+		a5_back_buffer.clear()
 
 	runs = _find_url_runs(sheets)
 	for run in runs:
@@ -74,3 +105,9 @@ def _find_url_runs(sheets: Iterable[Sheet]) -> list[list[Sheet]]:
 		runs.append(current_run)
 
 	return runs
+
+def _make_blank_a4() -> PageObject:
+	"""Creates a blank A4 page."""
+	return PageObject.create_blank_page(width=A4_SIZE[0], height=A4_SIZE[1])
+
+def _place_a5_on_a4(a4_page: PageObject, a5_page: PageObject, slot: str):
