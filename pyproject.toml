@@ -1,0 +1,16 @@
+[project]
+name = "kiwiairac"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.14"
+dependencies = [
+	"camelot-py",
+	"pypdf",
+	"pandas",
+	"beautifulsoup4",
+	"playwright",
+	"httpx>=0.28.1",
+	"platformdirs>=4.9.2",
+	"rich>=14.3.3",
+]
+
